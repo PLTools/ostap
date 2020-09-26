@@ -1,26 +1,26 @@
 opam-version: "2.0"
 synopsis: "Parser-combinator library"
-authors: "dboulytchev@gmail.com"
-maintainer: "danila.borovkov1996@gmail.com"
+authors: [ "dboulytchev@gmail.com" "danila.borovkov1996@gmail.com" "Kakadu@pm.me" ]
+maintainer: "Kakadu@pm.me"
 version:  "0.5"
 homepage: "http://oops.math.spbu.ru/projects/ostap"
 bug-reports: "https://github.com/Ostapers/ostap/issues"
 dev-repo:    "git+https://github.com/kverty/ostap.git"
 
 build: [
-  [make "-f" "Makefile.ob" ]
-  [make "-f" "Makefile.ob" "test"] { with-test }
+  [make]
+  [make "test"] { with-test }
 ]
 
 install: [make "PREFIX=%{prefix}%" "install"]
 remove:  ["ocamlfind" "remove" "ostap"]
-flags: [ light-uninstall ]
 
 
 depends: [
   "ocamlbuild" { build }
-  "ocamlfind" { build }
-  "camlp5" { >= "8" }
+  "ocamlfind"  { build }
+  "camlp5"     { >= "8" | = "8.00~alpha04" }
   "GT"
   "re"
 ]
+
