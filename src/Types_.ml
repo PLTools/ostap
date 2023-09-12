@@ -19,7 +19,7 @@ type ('a, 'b) tag = Parsed of 'a * 'b option | Failed of 'b option | Empty
 type ('stream, 'b, 'c) result = ('b * 'stream, 'c) tag
 
 exception Retry
-  
+
 let emptyResult = Failed None
 let failWith x = Failed (Some x)
 
@@ -43,7 +43,7 @@ let failWith x = Failed (Some x)
        struct
  	type t = Obj.t
 
- 	let compare x y = (Pervasives.compare : int -> int -> int) (Obj.magic x) (Obj.magic y)
+ 	let compare x y = (Stdlib.compare : int -> int -> int) (Obj.magic x) (Obj.magic y)
        end
      )
      type ks = Ks.t

@@ -1,6 +1,6 @@
 open Lazy
 open Matcher
-open Types
+open Types_
 open Reason
 
 module HashCons :
@@ -211,7 +211,7 @@ let memo_k =
               (fun (a', s') r' acc ->
                  match acc with
                  | Some _ -> acc
-                 | None when ((Pervasives.compare : int -> int -> int) (Obj.magic a) (Obj.magic a') == 0) && (s # equal s') -> Some r'
+                 | None when ((Stdlib.compare : int -> int -> int) (Obj.magic a) (Obj.magic a') == 0) && (s # equal s') -> Some r'
                  | _ -> None)
               table None) with
       | None ->
@@ -261,7 +261,7 @@ let memoresult =
       then (
         ks := K.singleton k;
         p (memo_k (fun a s ->
-            match List.find_all (fun (s', a') -> ((Pervasives.compare : int -> int -> int) (Obj.magic a) (Obj.magic a') == 0) && (s # equal s')) !ss with
+            match List.find_all (fun (s', a') -> ((Stdlib.compare : int -> int -> int) (Obj.magic a) (Obj.magic a') == 0) && (s # equal s')) !ss with
              | [] -> (ss := (s, a) :: !ss;
                       K.fold (fun k acc -> acc <@> (k a s)) !ks (Empty))
              |  _ -> Empty

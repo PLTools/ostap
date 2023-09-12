@@ -30,9 +30,13 @@ class t :
   Msg.t ->
   object ('a)
     method add      : 'a -> 'a                                              (** Add another reason                 *)
+
     method comment  : string -> 'a                                          (** Comment reason(s)                  *)
+
     method get      : p                                                     (** Interior friend function           *)
+
     method retrieve : [`All | `First of int] -> [`Acc | `Desc] -> retrieved (** Get reason in public form          *)
+
     method toString : [`All | `First of int] -> [`Acc | `Desc] -> string    (** Retrieve and apply default printer *)
   end
 

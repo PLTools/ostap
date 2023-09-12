@@ -2,15 +2,15 @@
  * Samlpe: Ostap sample.
  * Copyright (C) 2006-2009
  * Dmitri Boulytchev, St.Petersburg State University
- * 
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License version 2, as published by the Free Software Foundation.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * See the GNU Library General Public License version 2 for more details
  * (enclosed in the file COPYING).
  *)
@@ -31,8 +31,8 @@ let parse p pr s =
           (object
              inherit Matcher.t s
              inherit Util.Lexers.decimal s
-             inherit Util.Lexers.ident [] s                                      
-             inherit Util.Lexers.skip [
+             inherit Util.Lexers.ident [] s
+             inherit! Util.Lexers.skip [
 	       Matcher.Skip.whitespaces " \t\n";
 	       Matcher.Skip.lineComment "--";
 	       Matcher.Skip.nestedComment "(*" "*)"
@@ -44,11 +44,11 @@ let parse p pr s =
   | `Fail er -> Printf.printf "Syntax error: %s\n" er
 
 (* Supplementary printer combinators *)
-let id     x               = x               
-let pair   f g   (x, y)    = f x ^ g y       
-let triple f g h (x, y, z) = f x ^ g y ^ h z 
-let list   f x             = List.fold_left (^) "" @@ List.map f x 
-let option f               = function None -> "None" | Some x -> "Some " ^ f x 
+let id     x               = x
+let pair   f g   (x, y)    = f x ^ g y
+let triple f g h (x, y, z) = f x ^ g y ^ h z
+let list   f x             = List.fold_left (^) "" @@ List.map f x
+let option f               = function None -> "None" | Some x -> "Some " ^ f x
 
 (* An overview of the basic combinators:
     - sequencing
@@ -56,7 +56,7 @@ let option f               = function None -> "None" | Some x -> "Some " ^ f x
     - alternation
     - optionality
     - iteration
-*)                              
+*)
 let _ =
   (* Sequencing *)
   parse (ostap ("a" "b" "c")) (* several items in a row return a tuple of parse values *)
@@ -69,7 +69,7 @@ let _ =
         (pair Token.repr Token.repr)
         "abc";
   parse (ostap ("a" -"b" "c")) (* but the skipped item nevertheless important for parsing *)
-        (pair Token.repr Token.repr)        
+        (pair Token.repr Token.repr)
         "adc";
   parse (ostap (-"(" "a" -")")) (* it is quite usefule to omit a non-important symbols from *)
                                 (* being returned as a result                               *)
@@ -86,13 +86,13 @@ let _ =
   parse (ostap (x:"a" y:"b" z:"c" {"Something: " ^ (Token.repr x) ^ (Token.repr y) ^ (Token.repr z)})) (* the semantics can make use of a bindings *)
         id
         "a b c";
-  parse (ostap ("a" | "b")) (* besides sequencing, there is an alternation *) 
+  parse (ostap ("a" | "b")) (* besides sequencing, there is an alternation *)
         Token.repr
         "a";
-  parse (ostap ("a" | "b")) (* both branches are matched *) 
+  parse (ostap ("a" | "b")) (* both branches are matched *)
         Token.repr
         "b";
-  parse (ostap (x:("a" | "b") {"Something: " ^ Token.repr x})) (* grouping is allowed *) 
+  parse (ostap (x:("a" | "b") {"Something: " ^ Token.repr x})) (* grouping is allowed *)
         id
         "a";
   parse (ostap ("a"?)) (* optional parsing *)
@@ -131,12 +131,12 @@ let _ =
 
 (* Among the expression ostap (...) there is a structure item ostap (...) *)
 (* to specify a set of mutally-recirsive definitions:                     *)
-  
+
 ostap (
   animal  : "zeboro" | "cat" | "rabbit" | "giraffe";
   location: "pool" | "bank" | "cafe" | "theater";
   action  : "playing" | "eating" | "swimming" | "working";
-  phrase  : "A" animal "is" action "in" "a" location {"parsed"}                                                               
+  phrase  : "A" animal "is" action "in" "a" location {"parsed"}
 )
 
 let _ = List.iter (parse phrase id) ["A zeboro is playing in a theater";
@@ -151,34 +151,34 @@ let rec expr_to_string = function
 | Mul (x, y) -> "(" ^ expr_to_string x ^ " * " ^ expr_to_string y ^ ")"
 | Add (x, y) -> "(" ^ expr_to_string x ^ " + " ^ expr_to_string y ^ ")"
 
-(* Expressions with right-associative binaries *)                                                                      
+(* Expressions with right-associative binaries *)
 module RightAssoc =
   struct
-    
+
     ostap (
-      expr   : addi;                                                                        
-      addi   : x:mulli "+" y:addi {Add (x, y)} | mulli; 
+      expr   : addi;
+      addi   : x:mulli "+" y:addi {Add (x, y)} | mulli;
       mulli  : x:primary "*" y:mulli {Mul (x, y)} | primary;
       primary: x:IDENT {Var x} | -"(" expr -")"
-    )      
+    )
 
     let _ = List.iter (parse expr expr_to_string)  ["a"; "a+b"; "a+b+c"; "a+b*c"; "a+b*c+d"; "(a+b)*c"]
-  
-  end                             
 
-(* Expressions with left-associative binaries *)                                                                      
+  end
+
+(* Expressions with left-associative binaries *)
 module LeftAssoc =
   struct
-    
+
     ostap (
-      expr   : addi;                                                                        
+      expr   : addi;
       addi   : <x::xs> :!(Util.listBy)[ostap ("+")][mulli]   {List.fold_left (fun x y -> Add (x, y)) x xs}; (* note the use of a pattern for bindings; *)
-      mulli  : <x::xs> :!(Util.listBy)[ostap ("*")][primary] {List.fold_left (fun x y -> Mul (x, y)) x xs}; (* note a space between the "<...>" and the ":" *) 
+      mulli  : <x::xs> :!(Util.listBy)[ostap ("*")][primary] {List.fold_left (fun x y -> Mul (x, y)) x xs}; (* note a space between the "<...>" and the ":" *)
       primary: x:IDENT {Var x} | -"(" expr -")"
-    )      
+    )
 
     let _ = List.iter (parse expr expr_to_string)  ["a"; "a+b"; "a+b+c"; "a+b*c"; "a+b*c+d"; "(a+b)*c"]
-  
+
   end
 
 (* But better use a custom combinator Util.expr: *)
@@ -195,7 +195,7 @@ module ExprExample =
            |] 	                                            (*         --- the parser for the operator's infix and two-argument function to construct AST node      *)
            primary                                          (* --- a parser for the primary (simplest form of the expression)                                       *)
          );
-      
+
       primary: x:IDENT {Var x} | -"(" expr -")"
     )
 
@@ -209,13 +209,13 @@ module ShallowLanguageImplemenation =
 
     let empty  x       = failwith @@ "Undefined variable " ^ x
     let update x v s y = if x = y then v else s y
-                                                
+
     let runParser p s =
       match Util.parse
           (object
              inherit Matcher.t s
              inherit Util.Lexers.decimal s
-             inherit Util.Lexers.ident ["if"; "then"; "else"; "fi"; "while"; "do"; "done"] s                                      
+             inherit Util.Lexers.ident ["if"; "then"; "else"; "fi"; "while"; "do"; "done"] s
              inherit Util.Lexers.skip [
 	       Matcher.Skip.whitespaces " \t\n";
 	       Matcher.Skip.lineComment "--";
@@ -238,7 +238,7 @@ module ShallowLanguageImplemenation =
            |]
            primary
          );
-      
+
       primary: x:IDENT {fun s -> s x} | n:DECIMAL {fun s -> n} | -"(" expr -")";
 
       simple_stmt:
@@ -248,11 +248,11 @@ module ShallowLanguageImplemenation =
 
       stmt: <s::ss> : !(Util.listBy)[ostap (";")][simple_stmt] {List.fold_left (fun s ss d -> ss @@ s d) s ss}
     )
-    
+
     let fact =
       let f = runParser stmt "result := 1; while 1 - (n == 0) do result := result * n; n := n - 1 done" in
       fun n -> (f @@ update "n" n empty) "result"
 
     let _ = List.iter (fun n -> Printf.printf "fact %d = %d\n" n (fact n)) [1; 2; 3; 4; 5; 6; 7]
-                                              
+
   end

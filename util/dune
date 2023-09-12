@@ -1,0 +1,22 @@
+(env
+ (_
+  (flags
+   (:standard -warn-error -20-26-27-8-14-33-39-52))))
+
+(library
+ (name util)
+ (modules Util)
+ (package ostap)
+ (libraries src)
+ (flags
+  (:standard -open Src))
+ (preprocess
+  (action
+   (run %{project_root}/camlp5/pp5+ostap.exe %{input-file}))))
+
+(library
+ (name ostap)
+ (package ostap)
+ (modules ostap)
+ (wrapped false)
+ (libraries src util))

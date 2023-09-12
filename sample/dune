@@ -1,0 +1,14 @@
+(env
+ (_
+  (flags
+   (:standard -w -27-32 -warn-error -7-13-20-26-27-8-14-32-33-39-52))))
+
+(executable
+ (name Sample)
+ (libraries ostap)
+ (preprocess
+  (action
+   (run %{project_root}/camlp5/pp5+ostap.exe %{input-file}))))
+
+(cram
+ (deps Sample.exe))

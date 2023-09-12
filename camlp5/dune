@@ -1,0 +1,45 @@
+(env
+ (_
+  (flags
+   (:standard -warn-error -20-26-27-8-14-33-39-52))))
+
+(library
+ (name pa_ostap)
+ ;(public_name OCanren.syntax)
+ (modules extension)
+ (libraries camlp5 src)
+ (preprocessor_deps ./pp5+dump.exe)
+ (preprocess
+  (action
+   (run %{project_root}/camlp5/pp5+dump.exe %{input-file}))))
+
+(rule
+ (targets pp5+dump.exe)
+ ;(deps %{project_root}/config/package-doc.cfg)
+ (action
+  (run
+   mkcamlp5.opt
+   -package
+   camlp5.pa_o,camlp5.pr_o,camlp5.pr_dump,camlp5.extend,camlp5.quotations
+   ;%{read-lines:../config/package-doc.cfg}
+   -o
+   %{targets})))
+
+(rule
+ (targets pp5+ostap.exe)
+ ;(package OCanren)
+ (deps
+  ;(package GT)
+  (:cmas pa_ostap.cmxa))
+ (action
+  (run
+   mkcamlp5.opt
+   -package
+   camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_dump
+   ;%{read-lines:../config/package-doc.cfg}
+   -package
+   GT,re.str
+   %{project_root}/src/src.cmxa
+   %{cmas}
+   -o
+   %{targets})))

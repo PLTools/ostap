@@ -15,10 +15,10 @@
    * (enclosed in the file COPYING).
    *)
 
-open Types
+open Types_
 open String
 open Printf
-open Re_str
+open Re.Str
 open Reason
 
 module Token =
@@ -211,7 +211,7 @@ class t (s : String.t) =
     method regexp : 'b . String.t -> String.t -> ('a -> 'self -> ('self, 'b, Reason.t) result) -> ('self, 'b, Reason.t) result =
       fun name str -> self#get name
           (try Hashtbl.find regexps str with Not_found ->
-             let regexp = Re_str.regexp str in
+             let regexp = Re.Str.regexp str in
              Hashtbl.add regexps str regexp;
              regexp
           )

@@ -1,0 +1,21 @@
+(env
+ (_
+  (flags
+   (:standard -warn-error -20-26-27-8-14-33-39-52))))
+
+(library
+ (name src)
+ (package ostap)
+ (wrapped true)
+ (libraries GT re.str)
+ (modules
+  BNF3
+  Combinators
+  Errors
+  Matcher
+  Msg
+  Pretty
+  PrioReorderer
+  Reason
+  Trap
+  Types_))

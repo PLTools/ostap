@@ -222,14 +222,14 @@
 
 (**/**)
 
-#load "pa_extend.cmo";;
-#load "q_MLast.cmo";;
+(* #load "pa_extend.cmo";; *)
+(* #load "q_MLast.cmo";; *)
 
 open Pcaml
 open Printf
 open MLast
 
-open BNF3
+open Src.BNF3
 
 module Args =
   struct
@@ -1030,7 +1030,7 @@ EXTEND
       let name   = <:expr< $str:s$ >> in
       let regexp = <:expr< $name$ ^ "\\\\\\\\b" >> in
       let look   = <:expr< _ostap_stream # regexp ($name$) ($regexp$) >> in
-      let resType' = <:ctyp< $uid:"Types"$ . $lid:"result"$ >> in
+      let resType' = <:ctyp< $uid:"Types_"$ . $lid:"result"$ >> in
       let strType = <:ctyp< $uid:"String"$ . $lid:"t"$ >> in
       let resType = <:ctyp< $resType'$ '$"self"$ '$"b"$ '$"c"$ >> in
       let contType = <:ctyp< '$"alook"$ -> '$"self"$ -> $resType$ >> in
@@ -1100,7 +1100,7 @@ EXTEND
     [ p=UIDENT ->
           let p' = "get" ^ p in
           let look = <:expr< _ostap_stream # $p'$ >> in
-          let resType' = <:ctyp< $uid:"Types"$ . $lid:"result"$ >> in
+          let resType' = <:ctyp< $uid:"Types_"$ . $lid:"result"$ >> in
           let resType = <:ctyp< $resType'$ '$"self"$ '$"b"$ '$"c"$ >> in
           let contType = <:ctyp< '$"a" ^ p$ -> '$"self"$ -> $resType$ >> in
           let methodType = <:ctyp< ! $list:["b"]$ . $contType$ -> $resType$ >> in
@@ -1111,7 +1111,7 @@ EXTEND
     ] |
     [ p=STRING ->
           let look = <:expr< _ostap_stream # look $str:p$ >> in
-          let resType' = <:ctyp< $uid:"Types"$ . $lid:"result"$ >> in
+          let resType' = <:ctyp< $uid:"Types_"$ . $lid:"result"$ >> in
           let strType = <:ctyp< $uid:"String"$ . $lid:"t"$ >> in
           let resType = <:ctyp< $resType'$ '$"self"$ '$"b"$ '$"c"$ >> in
           let contType = <:ctyp< '$"alook"$ -> '$"self"$ -> $resType$ >> in
@@ -1123,7 +1123,7 @@ EXTEND
     ] |
     [ "$"; "("; p=expr; ")" ->
           let look = <:expr< _ostap_stream # look ($p$) >> in
-          let resType' = <:ctyp< $uid:"Types"$ . $lid:"result"$ >> in
+          let resType' = <:ctyp< $uid:"Types_"$ . $lid:"result"$ >> in
           let strType = <:ctyp< $uid:"String"$ . $lid:"t"$ >> in
           let resType = <:ctyp< $resType'$ '$"self"$ '$"b"$ '$"c"$ >> in
           let contType = <:ctyp< '$"alook"$ -> '$"self"$ -> $resType$ >> in
@@ -1136,7 +1136,7 @@ EXTEND
     [ "@"; "("; p=expr; n=OPT o_regexp_name; ")" ->
           let name = match n with None -> p | Some p -> p in
           let look = <:expr< _ostap_stream # regexp ($name$) ($p$) >> in
-          let resType' = <:ctyp< $uid:"Types"$ . $lid:"result"$ >> in
+          let resType' = <:ctyp< $uid:"Types_"$ . $lid:"result"$ >> in
           let strType = <:ctyp< $uid:"String"$ . $lid:"t"$ >> in
           let resType = <:ctyp< $resType'$ '$"self"$ '$"b"$ '$"c"$ >> in
           let contType = <:ctyp< '$"alook"$ -> '$"self"$ -> $resType$ >> in
