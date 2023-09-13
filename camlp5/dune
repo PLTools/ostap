@@ -15,13 +15,13 @@
 
 (rule
  (targets pp5+dump.exe)
- ;(deps %{project_root}/config/package-doc.cfg)
+ (deps %{project_root}/config/package-doc.cfg)
  (action
   (run
    mkcamlp5.opt
    -package
    camlp5.pa_o,camlp5.pr_o,camlp5.pr_dump,camlp5.extend,camlp5.quotations
-   ;%{read-lines:../config/package-doc.cfg}
+   %{read-lines:../config/package-doc.cfg}
    -o
    %{targets})))
 
@@ -30,13 +30,15 @@
  ;(package OCanren)
  (deps
   ;(package GT)
+  %{project_root}/config/package-doc.cfg
+  %{project_root}/src/src.cmxa
   (:cmas pa_ostap.cmxa))
  (action
   (run
    mkcamlp5.opt
    -package
    camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_dump
-   ;%{read-lines:../config/package-doc.cfg}
+   %{read-lines:../config/package-doc.cfg}
    -package
    GT,re.str
    %{project_root}/src/src.cmxa

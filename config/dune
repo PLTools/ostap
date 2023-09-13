@@ -1,0 +1,50 @@
+(executable
+ (name discover)
+ (modules Discover)
+ (libraries str dune-configurator))
+
+(executable
+ (name disc_delta_root)
+ (modules disc_delta_root)
+ (libraries str dune-configurator))
+
+(rule
+ (targets delta-path.cfg)
+ (action
+  (run ./disc_delta_root.exe %{project_root} %{workspace_root})))
+
+(rule
+ (targets
+  ;camlp5-flags.cfg
+  ;gt-flags.cfg
+  ;gt-flags-native.cfg
+  ;logger-flags.cfg
+  ;stublibs-dir.cfg
+  ;pp5+instrumentalization.cfg
+  ;instrumentalization.cfg
+  package-doc.cfg)
+ (deps
+  (package GT))
+ (action
+  (run
+   ./discover.exe
+   -doc-flags
+   -all-flags
+   -set-project-root
+   %{project_root})))
+
+; (rule
+;  (targets tests.txt dune.tests)
+;  (alias discover-tests)
+;  (deps
+;   tests.dune.tpl
+;   (source_tree ../regression))
+;  (mode
+;   (promote-into ../regression))
+;  (action
+;   (run
+;    ./discover.exe
+;    -tests
+;    -tests-dune
+;    -tests-dir
+;    %{project_root}/regression)))
