@@ -6,7 +6,7 @@
 (library
  (name util)
  (modules Util)
- (package ostap)
+ (public_name ostap.util)
  (libraries src)
  (flags
   (:standard -open Src))
@@ -16,7 +16,8 @@
 
 (library
  (name ostap)
- (package ostap)
+ ;(package ostap)
+ (public_name ostap)
  (modules ostap)
  (wrapped false)
  (libraries src util))

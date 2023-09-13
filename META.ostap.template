@@ -1,0 +1,49 @@
+version = "0.3"
+description = "Parser-combinator library"
+requires = "re.str GT ostap.src ostap.util"
+archive(byte) = "ostap.cma"
+archive(byte, plugin) = "ostap.cma"
+archive(native) = "ostap.cmxa"
+exists_if = "ostap.cma"
+
+package "syntax" (
+ version = "0.3"
+ description = "Camlp5 syntax extension"
+ requires = "camlp5 ostap.BNF3"
+ directory = "syntax"
+ archive(syntax, preprocessor) = "pa_ostap.cma"
+ archive(syntax, toploop) = "pa_ostap.cma"
+)
+
+package "BNF3" (
+ version = "0.3"
+ description = "ENBF grammar representation"
+ requires = "camlp5 ostap"
+ directory = "BNF3"
+ archive(byte) = "BNF3.cma"
+ archive(byte, plugin) = "BNF3.cma"
+ archive(native) = "BNF3.cmxa"
+ archive(native, plugin) = "BNF3.cmxs"
+)
+
+package "src" (
+ version = "0.3"
+ description = "combinators implementation"
+ requires = ""
+ directory = "src"
+ archive(byte) = "src.cma"
+ archive(byte, plugin) = "src.cma"
+ archive(native) = "src.cmxa"
+ archive(native, plugin) = "src.cmxs"
+)
+
+package "util" (
+ version = "0.3"
+ description = ""
+ requires = ""
+ directory = "util"
+ archive(byte) = "util.cma"
+ archive(byte, plugin) = "util.cma"
+ archive(native) = "util.cmxa"
+ archive(native, plugin) = "util.cmxs"
+)

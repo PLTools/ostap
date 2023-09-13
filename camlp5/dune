@@ -5,9 +5,11 @@
 
 (library
  (name pa_ostap)
- ;(public_name OCanren.syntax)
+ (public_name ostap.syntax)
  (modules extension)
- (libraries camlp5 src)
+ (libraries camlp5 BNF3)
+ (flags
+  (:standard -linkall))
  (preprocessor_deps ./pp5+dump.exe)
  (preprocess
   (action
@@ -29,9 +31,8 @@
  (targets pp5+ostap.exe)
  ;(package OCanren)
  (deps
-  ;(package GT)
   %{project_root}/config/package-doc.cfg
-  %{project_root}/src/src.cmxa
+  %{project_root}/src/BNF3.cmxa
   (:cmas pa_ostap.cmxa))
  (action
   (run
@@ -41,7 +42,7 @@
    %{read-lines:../config/package-doc.cfg}
    -package
    GT,re.str
-   %{project_root}/src/src.cmxa
+   %{project_root}/src/BNF3.cmxa
    %{cmas}
    -o
    %{targets})))

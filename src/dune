@@ -4,12 +4,17 @@
    (:standard -warn-error -20-26-27-8-14-33-39-52))))
 
 (library
+ (name BNF3)
+ (public_name ostap.BNF3)
+ (modules BNF3)
+ (wrapped false))
+
+(library
  (name src)
- (package ostap)
+ (public_name ostap.src)
  (wrapped true)
- (libraries GT re.str)
+ (libraries GT re.str BNF3)
  (modules
-  BNF3
   Combinators
   Errors
   Matcher

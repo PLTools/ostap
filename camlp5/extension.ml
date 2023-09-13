@@ -229,7 +229,7 @@ open Pcaml
 open Printf
 open MLast
 
-open Src.BNF3
+open BNF3
 
 module Args =
   struct
