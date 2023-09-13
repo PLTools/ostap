@@ -37,10 +37,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies for documentation
-        run: opam install odoc pa_ppx --yes
+      - run: opam update
 
-      - run: opam install . --yes --deps-only --with-test --with-doc
+      - name: Install dependencies for documentation
+        run: opam install odoc pa_ppx --yes --confirm-level=unsafe-yes
+
+      - run: opam install . --yes --deps-only --with-test --with-doc --confirm-level=unsafe-yes
       - run: opam exec -- dune build
       - run: opam exec -- dune runtest
 
