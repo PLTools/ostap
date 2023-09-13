@@ -9,12 +9,39 @@
  (modules BNF3)
  (wrapped false))
 
+; (library
+;  (name src)
+;  (public_name ostap.src)
+;  (wrapped true)
+;  (libraries GT re.str BNF3)
+;  (modules
+;   Combinators
+;   Errors
+;   Matcher
+;   Msg
+;   Pretty
+;   PrioReorderer
+;   Reason
+;   Trap
+;   Types_))
+
+; (library
+;  (name util)
+;  (modules Util)
+;  (public_name ostap.util)
+;  (libraries src)
+;  (flags
+;   (:standard -open Src))
+;  (preprocess
+;   (action
+;    (run %{project_root}/camlp5/pp5+ostap.exe %{input-file}))))
+
 (library
- (name src)
- (public_name ostap.src)
- (wrapped true)
- (libraries GT re.str BNF3)
+ (name ostap)
+ ;(package ostap)
+ (public_name ostap)
  (modules
+  ;ostap
   Combinators
   Errors
   Matcher
@@ -23,4 +50,12 @@
   PrioReorderer
   Reason
   Trap
-  Types_))
+  Types_
+  Util)
+ (wrapped true)
+ (libraries GT re.str BNF3)
+ (preprocess
+  (per_module
+   ((action
+     (run %{project_root}/camlp5/pp5+ostap.exe %{input-file}))
+    Util))))
