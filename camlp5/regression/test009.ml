@@ -15,9 +15,9 @@
  * (enclosed in the file COPYING).
  *)
 
-open Re_str
+open Re.Str
 open Ostap
-open Types
+open Types_
 
 class lexer (s : string) =
   object (self : 'self)
@@ -27,8 +27,8 @@ class lexer (s : string) =
     val p = 0
     val s = s
 
-    method private pos = p
-    method private str = s
+    method pos = p
+    method str = s
     method equal : 'self -> bool =
       fun s' -> (s = s' # str) && (p = s' # pos)
 

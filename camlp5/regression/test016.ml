@@ -1,6 +1,6 @@
-open Re_str
+open Re.Str
 open Ostap
-open Types
+open Types_
 open Matcher
 open Printf
 
@@ -17,7 +17,7 @@ class lexer (str :  string) =
 
     inherit Matcher.t str as super
 
-    method skip p c = skip str p c
+    method! skip p c = skip str p c
   end
 
 ostap (

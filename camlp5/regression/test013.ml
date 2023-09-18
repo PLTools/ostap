@@ -1,19 +1,16 @@
-open Re_str
 open Ostap
-open Types
+open Types_
 open Matcher
-open Printf
-open Lazy
-open Combinators
+
 
 class lexer s =
   let skip  = Skip.create [Skip.whitespaces " \n\t\r"] in
-  let const = Re_str.regexp "[0-9]+" in
+  let const = Re.Str.regexp "[0-9]+" in
   object (self)
 
     inherit Matcher.t s
 
-    method skip p c = skip s p c
+    method! skip p c = skip s p c
     method getCONST : 'b . (Token.t -> 'self -> ('self, 'b, Reason.t) result) -> ('self, 'b, Reason.t) result = self#get "constant" const
 
   end

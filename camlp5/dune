@@ -41,7 +41,7 @@
    camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_o,camlp5.pr_dump
    %{read-lines:../config/package-doc.cfg}
    -package
-   GT,re.str
+   re.str
    %{project_root}/src/BNF3.cmxa
    %{cmas}
    -o
@@ -61,7 +61,7 @@
    camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_o
    %{read-lines:../config/package-doc.cfg}
    -package
-   GT,re.str
+   re.str
    %{bnf3}
    %{cmas}
    -o
