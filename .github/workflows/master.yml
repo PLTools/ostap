@@ -50,11 +50,11 @@ jobs:
       #### API documentation
       - name: Build API documentation
         run: opam exec -- dune build @doc
-        if: false
+
 
       - name: Deploy API documentation
         #if: ${{ github.event.pull_request.head.repo.full_name == 'PLTools/OCanren' }}
-        if: false
+        #if: false
         # We do not deploy in forks
         uses: peaceiris/actions-gh-pages@v3
         with:
