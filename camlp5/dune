@@ -29,7 +29,6 @@
 
 (rule
  (targets pp5+ostap.exe)
- ;(package OCanren)
  (deps
   %{project_root}/config/package-doc.cfg
   %{project_root}/src/BNF3.cmxa
@@ -49,7 +48,6 @@
 
 (rule
  (targets pp5+ostap+o.exe)
- ;(package OCanren)
  (deps
   %{project_root}/config/package-doc.cfg
   (:bnf3 %{project_root}/src/BNF3.cma)

@@ -15,17 +15,10 @@
 
 (rule
  (targets
-  ;camlp5-flags.cfg
-  ;gt-flags.cfg
-  ;gt-flags-native.cfg
-  ;logger-flags.cfg
-  ;stublibs-dir.cfg
-  ;pp5+instrumentalization.cfg
-  ;instrumentalization.cfg
   pdflatex.cfg
-  package-doc.cfg)
- (deps
-  (package GT))
+  package-doc.cfg
+  ;
+  )
  (action
   (run
    ./discover.exe
@@ -33,19 +26,3 @@
    -all-flags
    -set-project-root
    %{project_root})))
-
-; (rule
-;  (targets tests.txt dune.tests)
-;  (alias discover-tests)
-;  (deps
-;   tests.dune.tpl
-;   (source_tree ../regression))
-;  (mode
-;   (promote-into ../regression))
-;  (action
-;   (run
-;    ./discover.exe
-;    -tests
-;    -tests-dune
-;    -tests-dir
-;    %{project_root}/regression)))

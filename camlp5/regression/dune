@@ -20,9 +20,11 @@
   test013
   test014
   test015
-  test016
-  test017
-  test020)
+  ;test016
+  ;test017
+  ;test020
+  ;
+  )
  (modules
   test001
   test002
@@ -39,10 +41,12 @@
   test013
   test014
   test015
-  test016
-  test017
-  test020)
- (public_names - - - - - - - - - - - - - - - - - -)
+  ;test016
+  ;test017
+  ;test020
+  ;
+  )
+ (public_names - - - - - - - - - - - - - - -)
  (libraries ostap)
  (preprocess
   (action

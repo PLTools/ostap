@@ -18,7 +18,6 @@ let read_file fn =
   let lines = List.rev @@ helper [] in
   String.concat "\n" lines
 
-let extract_words = Cfg.Flags.extract_comma_space_separated_words
 let string_match re s = Str.string_match re s 0
 let match_fn_ext fn ext = String.equal ext @@ Filename.extension fn
 
@@ -61,73 +60,6 @@ let discover_camlp5_flags cfg =
       [ "pa_o.cmo"; "pa_op.cmo"; "pr_o.cmo"; "pr_dump.cmo" ]
   in
   Cfg.Flags.write_lines "camlp5-flags.cfg" camlp5_archives
-
-let discover_gt_flags cfg =
-  let gt_archives =
-    Cfg.Process.run_capture_exn cfg "ocamlfind"
-      [
-        "query";
-        "-pp";
-        "camlp5";
-        "-a-format";
-        "-predicates";
-        "byte";
-        "GT,GT.syntax";
-      ]
-  in
-  Cfg.Flags.write_lines "gt-flags.cfg" @@ extract_words gt_archives;
-  let gt_archives_native =
-    Cfg.Process.run_capture_exn cfg "ocamlfind"
-      [
-        "query";
-        "-pp";
-        "camlp5";
-        "-a-format";
-        "-predicates";
-        "native";
-        "GT,GT.syntax";
-      ]
-  in
-  Cfg.Flags.write_lines "gt-flags-native.cfg"
-  @@ extract_words gt_archives_native
-
-let discover_logger_flags cfg =
-  (* logger has two kinds of CMOs: two from camlp5 (pr_o and pr_dump) and one for logger.
-     `pr_o` is required because logger uses pretty-printing inside itself.
-     `pr_dump` is required for printing result in binary format (to save line numbers).
-     `pa_log` for logger itself in META file they are listed as `pr_o.cmo pr_dump.cmo pa_log.cmo`
-      With ocamlfind they are passed as is to compilation command prefixed by
-      linking directory options. Because of that we can't write, for example,
-      '../camlp5/pr_o.cmo` in META file.
-      With dune these three cmos are prefixed using full path, so using naive
-      approach they are all located in the same directory $LIB/logger. This is
-      wrong but we can hack it in dune script because we know exact names of cmos.
-  *)
-  let camlp5_dir = discover_camlp5_dir cfg in
-  let logger_archives =
-    Cfg.Process.run_capture_exn cfg "ocamlfind"
-      [
-        "query";
-        "-pp";
-        "camlp5";
-        "-a-format";
-        "-predicates";
-        "byte";
-        "logger,logger.syntax";
-      ]
-  in
-  let pr_o_cmo = "pr_o.cmo" in
-  let pr_dump_cmo = "pr_dump.cmo" in
-  let cmos =
-    extract_words logger_archives
-    |> List.map (fun file ->
-         if Filename.basename file = pr_o_cmo then
-           Filename.concat camlp5_dir pr_o_cmo
-         else if Filename.basename file = pr_dump_cmo then
-           Filename.concat camlp5_dir pr_dump_cmo
-         else file)
-  in
-  Cfg.Flags.write_lines "logger-flags.cfg" cmos
 
 let discover_stats () =
   let filename = "instrumentalization.cfg" in
@@ -259,8 +191,5 @@ let () =
     in
     if !tests_dune || !all then gen_tests_dune cfg testnames;
     if !camlp5_flags || !all_flags || !all then discover_camlp5_flags cfg;
-    if !gt_flags || !all_flags || !all then (
-      discover_stubs_dir cfg;
-      discover_gt_flags cfg);
-    if !logger_flags || !all_flags || !all then discover_logger_flags cfg;
+    if !gt_flags || !all_flags || !all then discover_stubs_dir cfg;
     ())
