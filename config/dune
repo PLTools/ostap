@@ -22,6 +22,7 @@
   ;stublibs-dir.cfg
   ;pp5+instrumentalization.cfg
   ;instrumentalization.cfg
+  pdflatex.cfg
   package-doc.cfg)
  (deps
   (package GT))

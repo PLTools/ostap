@@ -213,14 +213,14 @@ module ShallowLanguageImplemenation =
     let runParser p s =
       match Util.parse
           (object
-             inherit Matcher.t s
-             inherit Util.Lexers.decimal s
-             inherit Util.Lexers.ident ["if"; "then"; "else"; "fi"; "while"; "do"; "done"] s
-             inherit Util.Lexers.skip [
-	       Matcher.Skip.whitespaces " \t\n";
-	       Matcher.Skip.lineComment "--";
-	       Matcher.Skip.nestedComment "(*" "*)"
-             ] s
+            inherit Matcher.t s
+            inherit Util.Lexers.decimal s
+            inherit Util.Lexers.ident ["if"; "then"; "else"; "fi"; "while"; "do"; "done"] s
+            inherit! Util.Lexers.skip [
+              Matcher.Skip.whitespaces " \t\n";
+              Matcher.Skip.lineComment "--";
+              Matcher.Skip.nestedComment "(*" "*)"
+            ] s
            end)
           (ostap (p -EOF))
       with
@@ -241,12 +241,12 @@ module ShallowLanguageImplemenation =
 
       primary: x:IDENT {fun s -> s x} | n:DECIMAL {fun s -> n} | -"(" expr -")";
 
-      simple_stmt:
+      simpleStmt:
         x:IDENT ":=" e:expr                            {fun s -> update x (e s) s}
       | "if" c:expr "then" s1:stmt "else" s2:stmt "fi" {fun s -> (if c s = 0 then s2 else s1) s}
       | "while" c:expr "do" s1:stmt "done"             {fun s -> let rec w s = if c s = 0 then s else w (s1 s) in w s};
 
-      stmt: <s::ss> : !(Util.listBy)[ostap (";")][simple_stmt] {List.fold_left (fun s ss d -> ss @@ s d) s ss}
+      stmt: <s::ss> : !(Util.listBy)[ostap (";")][simpleStmt] {List.fold_left (fun s ss d -> ss @@ s d) s ss}
     )
 
     let fact =

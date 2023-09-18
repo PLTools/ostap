@@ -38,11 +38,31 @@
   (run
    mkcamlp5.opt
    -package
-   camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_dump
+   camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_o,camlp5.pr_dump
    %{read-lines:../config/package-doc.cfg}
    -package
    GT,re.str
    %{project_root}/src/BNF3.cmxa
+   %{cmas}
+   -o
+   %{targets})))
+
+(rule
+ (targets pp5+ostap+o.exe)
+ ;(package OCanren)
+ (deps
+  %{project_root}/config/package-doc.cfg
+  (:bnf3 %{project_root}/src/BNF3.cma)
+  (:cmas pa_ostap.cma))
+ (action
+  (run
+   mkcamlp5
+   -package
+   camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_o
+   %{read-lines:../config/package-doc.cfg}
+   -package
+   GT,re.str
+   %{bnf3}
    %{cmas}
    -o
    %{targets})))

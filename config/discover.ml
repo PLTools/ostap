@@ -189,6 +189,7 @@ let gen_cram_files tests path =
          Printf.fprintf ch "  $ ./%s.exe" name;
          close_out ch))
 
+let discover_pdflatex () = Cfg.Flags.write_lines "pdflatex.cfg" [ "true" ]
 (*** command line arguments ***)
 
 let tests = ref false
@@ -244,6 +245,7 @@ let () =
       else []
     in
 
+    discover_pdflatex ();
     if args_config.project_root <> "" then
       discover_pp5_dump_instrumentalization ();
     if !stats_flags || !all_flags then discover_stats ();

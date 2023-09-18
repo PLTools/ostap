@@ -12,3 +12,60 @@
 
 (cram
  (deps Sample.exe))
+
+(rule
+ (targets code.sty)
+ (deps %{project_root}/src/code.sty)
+ (mode
+  (promote (until-clean)))
+ (enabled_if
+  (= true %{read-lines:../config/pdflatex.cfg}))
+ (action
+  (copy %{project_root}/src/code.sty %{targets})))
+
+(rule
+ (targets ostap.sty)
+ (deps
+  %{project_root}/latex/ostap.sty
+  ;%{project_root}/config/pdflatex.cfg
+  )
+ (mode
+  (promote (until-clean)))
+ (enabled_if
+  (= "true" %{read-lines:../config/pdflatex.cfg}))
+ (action
+  (copy %{project_root}/latex/ostap.sty %{targets})))
+
+(rule
+ (targets Sample.ml.tex)
+ (enabled_if
+  (= true %{read-lines:../config/pdflatex.cfg}))
+ (deps
+  %{project_root}/camlp5/pp5+ostap+o.exe
+  (:input Sample.ml))
+ (mode
+  (promote
+   (until-clean)
+   (only Sample.ml.tex)))
+ (action
+  (with-stdout-to
+   %{targets}.tmp
+   (run %{project_root}/camlp5/pp5+ostap.exe -tex %{input} %{input}))))
+
+(rule
+ (targets Sample_grammar.pdf)
+ (enabled_if
+  (= true %{read-lines:../config/pdflatex.cfg}))
+ (deps
+  %{project_root}/camlp5/pp5+ostap+o.exe
+  %{project_root}/config/pdflatex.cfg
+  code.sty
+  ostap.sty
+  Sample.ml.tex
+  (:input Sample_grammar.tex))
+ (mode
+  (promote (until-clean)))
+ (action
+  (progn
+   (echo FUCK)
+   (run pdflatex -shell-escape -interaction=nonstopmode %{input}))))
