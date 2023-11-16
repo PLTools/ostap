@@ -25,6 +25,7 @@
   Util)
  (wrapped true)
  (libraries GT re.str BNF3)
+ (preprocessor_deps %{project_root}/camlp5/pp5+ostap.exe)
  (preprocess
   (per_module
    ((action
