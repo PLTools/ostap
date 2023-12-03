@@ -211,7 +211,7 @@ and FileLoc :
          succ, Some fil, reloc
 
       let stripLines s =
-         let r = Re.Str.regexp "\r?\n#line \"\([^\"]*\)\" (\([0-9]+\):\([0-9]+\))\r?\n" in
+         let r = Re.Str.regexp {|\r?\n#line \"\([^\"]*\)\" (\([0-9]+\):\([0-9]+\))\r?\n|} in
          let makeInt i s = int_of_string (Re.Str.matched_group i s) in
          let rec inner pos loc m s acc =
             try
@@ -261,14 +261,14 @@ let string t =
       try
         t.args.(int_of_string (Re.Str.replace_matched "\\1" s))
       with
-      | Failure "int_of_string" ->
+      | Failure s when String.equal s "int_of_string" ->
           raise (Failure
-                   (sprintf "invalid integer parameter specification in message phrase \"%s\"" s)
+                   (sprintf "invalid integer parameter specification in message phrase %S" s)
                 )
 
-      | Invalid_argument "index out of bounds" ->
+      | Invalid_argument s when String.equal s "index out of bounds" ->
           raise (Failure
-                   (sprintf "index out of bound while accessing message parameter in \"%s\"" s)
+                   (sprintf "index out of bound while accessing message parameter in %S" s)
                 )
     )
     t.phrase

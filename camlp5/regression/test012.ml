@@ -71,6 +71,8 @@ ostap (
 
 let _ =
   match main (new lexer "b+a-") (fun res s -> match res with
-	                                            | `I _ -> Parsed ((res, s), None)) with
+	                                            | `I _ -> Parsed ((res, s), None)
+                                              | _ -> failwith "Not implemented") with
   | Parsed _ -> Printf.printf "Parsed."
+  | Empty -> failwith "Not implemented"
   | Failed m -> Printf.printf "Not parsed:\n%s\n" (Reason.toString `All `Acc m)

@@ -1,7 +1,5 @@
 open Lazy
-open Matcher
 open Types_
-open Reason
 
 module HashCons :
   sig
@@ -76,7 +74,7 @@ module HashCons :
                       try
                         for i = 0 to lx - 1 do
                           let fx, fy = field x i, field y i in
-                          let fxs, fys = List.init (size x) (field x), List.init (size y) (field y) in
+                          (* let fxs, fys = List.init (size x) (field x), List.init (size y) (field y) in *)
                           let c =
                             if tx = closure_tag
                             then
@@ -166,7 +164,7 @@ module Mem : sig
   end =
   struct
     type marrow = Obj.t
-    let mapply : marrow -> 'a -> 'b = fun m a -> (Obj.magic m) a
+    let mapply : marrow -> 'a -> 'b = fun m a -> (Obj.magic m: _ -> _) a
 
     let memoize : ('a -> 'b) -> marrow =
       fun f -> Obj.magic (
@@ -241,7 +239,7 @@ let empty =
   fun s k -> return () s k
 
 let fail =
- fun r s k -> Failed r
+ fun r _s _k -> Failed r
 
 let lift =
   fun s k -> k s s
@@ -251,6 +249,7 @@ let sink =
     match p s k with
     | Parsed ((s, _), f) -> Parsed ((s, s), f)
     | Failed x           -> Failed x
+    | Empty -> Empty
 
 let memoresult =
   fun p ->
@@ -333,7 +332,7 @@ let rec many : ('a, 'stream, 'b, 'c) parser -> ('a list, 'stream, 'b, 'c) parser
     let tmp = loop [] s in
     !result *)
 
-let rec many : ('a, 'stream, 'b, 'c) parser -> ('a list, 'stream, 'b, 'c) parser =
+let many : ('a, 'stream, 'b, 'c) parser -> ('a list, 'stream, 'b, 'c) parser =
   fun p -> memo (fun s k ->
     let rec loop alist stream result =
       result <@>
@@ -359,7 +358,7 @@ let someFold =
           (many p)  |> (fun xs ->
           return (x :: xs)))
 *)
-let rec some : ('a, 'stream, 'b, 'c) parser -> ('a list, 'stream, 'b, 'c) parser =
+let some : ('a, 'stream, 'b, 'c) parser -> ('a list, 'stream, 'b, 'c) parser =
   fun p -> memo (fun s k ->
     let rec loop alist stream =
       p stream (memo_k (fun a stream' ->
@@ -390,6 +389,7 @@ let altl =
 let comment p str s k =
   match p s k with
   | (Parsed _ as x) -> x
+  | Empty -> Empty
   | Failed m -> Failed (comment str m)
 
 let fix =

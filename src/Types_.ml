@@ -67,4 +67,5 @@ let bind p k f =
             | `Ok v'     -> Parsed ((v', s), err)
             | `Fail err' -> Failed (Some err')
            )
+       | Empty -> Empty
        | Failed x -> Failed x)

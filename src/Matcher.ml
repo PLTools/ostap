@@ -36,16 +36,16 @@ end
 let except str =
   let n = String.length str - 1 in
   let b = Buffer.create 64 in
-  Buffer.add_string b "\(";
+  Buffer.add_string b "\\(";
   for i=0 to n do
-    Buffer.add_string b "\(";
+    Buffer.add_string b "\\(";
     for j=0 to i-1 do
       Buffer.add_string b (quote (String.sub str j 1))
     done;
-    Buffer.add_string b (sprintf "[^%s]\)" (quote (String.sub str i 1)));
-    if i < n then Buffer.add_string b "\|"
+    Buffer.add_string b (sprintf "[^%s]\\)" (quote (String.sub str i 1)));
+    if i < n then Buffer.add_string b "\\|"
   done;
-  Buffer.add_string b "\)*";
+  Buffer.add_string b "\\)*";
   Buffer.contents b
 
 let checkPrefix prefix s p =
@@ -119,7 +119,7 @@ struct
        with Not_found -> `Skipped p
     )
 
-  let rec create skippers =
+  let create skippers =
     let f =
       List.fold_left
         (fun acc g ->
@@ -129,7 +129,7 @@ struct
               | x -> x
            )
         )
-        (fun s p -> `Skipped p)
+        (fun _s p -> `Skipped p)
         skippers
     in
     (fun s p coord ->

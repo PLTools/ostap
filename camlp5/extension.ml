@@ -222,13 +222,10 @@
 
 (**/**)
 
-(* #load "pa_extend.cmo";; *)
-(* #load "q_MLast.cmo";; *)
+[@@@ocaml.warning "-27"]
 
 open Pcaml
 open Printf
-open MLast
-
 open BNF3
 
 module Args =
@@ -275,7 +272,7 @@ module Cache =
 
     let cache x y = Hashtbl.add h (compress x) y
 
-    let rec cached x =
+    let cached x =
       let x = compress x in
       let rec substitute acc s i j =
 	let len = String.length s in
@@ -320,7 +317,7 @@ let rec get_ident = function
   | <:expr< ($list:el$) >> -> List.flatten (List.map get_ident el)
   | <:expr< $p1$ $p2$ >> -> get_ident p1 @ get_ident p2
   | <:expr< { $list:lel$ } >> ->
-      List.flatten (List.map (fun (lab, e) -> get_ident e) lel)
+      List.flatten (List.map (fun (_lab, e) -> get_ident e) lel)
   | <:expr< ($e$ : $_$) >> -> get_ident e
   | _ -> []
 
@@ -340,7 +337,7 @@ let rec get_defined_ident = function
   | <:patt< # $lilongid:_$ >> -> []
   | <:patt< $p1$ $p2$ >> -> get_defined_ident p1 @ get_defined_ident p2
   | <:patt< { $list:lpl$ } >> ->
-      List.flatten (List.map (fun (lab, p) -> get_defined_ident p) lpl)
+      List.flatten (List.map (fun (_lab, p) -> get_defined_ident p) lpl)
   | <:patt< $p1$ | $p2$ >> -> get_defined_ident p1 @ get_defined_ident p2
   | <:patt< $p1$ .. $p2$ >> -> get_defined_ident p1 @ get_defined_ident p2
   | <:patt< ($p$ : $_$) >> -> get_defined_ident p
@@ -428,7 +425,7 @@ EXTEND
       (* let typ = <:ctyp< # $list:["Matcher"; "t"]$ >> in *)
       (* let pwel = [(<:patt< ( $lid:"_ostap_stream"$ : $typ$ ) >>, Ploc.VaVal None, body)] in *)
       let pwel = [(<:patt< $lid:"_ostap_stream"$ >>, Ploc.VaVal None, body)] in
-      let f = <:expr< fun [$list:pwel$] >> in
+      let _f = <:expr< fun [$list:pwel$] >> in
       (match tree with Some tree -> Cache.cache (!printExpr p) tree | None -> ());
       p
     ]
@@ -927,10 +924,7 @@ EXTEND
         [p] -> p
       |  _  ->
         let (p, trees) = List.split p in
-        let trees =
-          List.map
-          (fun x -> match x with Some x -> x)
-          (List.filter (fun x -> x <> None) trees)
+        let trees = List.filter_map Fun.id trees
         in
           match
             List.fold_right
@@ -950,7 +944,7 @@ EXTEND
       let (p, trees) = List.split p in
       let trees =
         List.map
-          (fun x -> match x with Some x -> x)
+          Option.get
           (List.filter (fun x -> x <> None) trees)
       in
       let trees =

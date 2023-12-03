@@ -42,6 +42,7 @@ let _ =
     match main (new lexer input) (fun res s -> Parsed ((res, s), None)) with
     | Parsed ((b, _), _) -> Printf.printf "Parsed: %s\n" (print b)
     | Failed _ -> Printf.printf "Not parsed:\n"
+    | Empty -> failwith "Not implemented"
   in
   let input0 = "1+2+3" in
   let input1 = "1-2-3" in

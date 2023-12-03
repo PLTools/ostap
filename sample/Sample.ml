@@ -170,6 +170,7 @@ module RightAssoc =
 module LeftAssoc =
   struct
 
+    [@@@ocaml.warning "-8"]
     ostap (
       expr   : addi;
       addi   : <x::xs> :!(Util.listBy)[ostap ("+")][mulli]   {List.fold_left (fun x y -> Add (x, y)) x xs}; (* note the use of a pattern for bindings; *)
@@ -227,6 +228,7 @@ module ShallowLanguageImplemenation =
       | `Ok   p  -> p
       | `Fail er -> failwith @@ Printf.sprintf "Syntax error: %s\n" er
 
+    [@@@ocaml.warning "-8"]
     ostap (
       expr:
         !(Util.expr

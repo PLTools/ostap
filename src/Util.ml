@@ -18,7 +18,6 @@
 
 open Combinators
 open Matcher
-open Printf
 
 module Ostap =
   struct
@@ -27,6 +26,7 @@ module Ostap =
 
   end
 
+[@@@ocaml.warning "-8-27"]
 ostap (
   keyword[name]: @(name ^ "\\b" : name)
 )
@@ -76,6 +76,7 @@ ostap (
   id[x]: x
 )
 
+[@@@ocaml.warning "+8+27"]
 let expr f ops opnd =
   let ops =
     Array.map
@@ -125,7 +126,7 @@ module Lexers =
 	method private keyword = k
       end
 
-    class virtual genericIdent regexp name keywords s =
+    class virtual genericIdent regexp name keywords _s =
       let regexp = Re.Str.regexp regexp in
       object(self : 'self)
 	inherit checkKeywords keywords
@@ -139,7 +140,7 @@ module Lexers =
                        else k r s)
       end
 
-    class virtual infix s =
+    class virtual infix _s =
       let regexp = Re.Str.regexp "[+*/%$#@!|&^~?<>:=\\-]+" in
       object(self : 'self)
         method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
@@ -162,7 +163,7 @@ module Lexers =
 	method getIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result = ident#getIdent
       end
 
-    class virtual decimal s =
+    class virtual decimal _s =
       let regexp = Re.Str.regexp "-?[0-9]+" in
       object(self : 'self)
         method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
@@ -170,7 +171,7 @@ module Lexers =
           fun k -> self#get "decimal constant" regexp (fun t s -> k (int_of_string (Token.repr t)) s)
       end
 
-    class virtual string s =
+    class virtual string _s =
       let regexp = Re.Str.regexp "\"\\([^\"]\\|\"\"\\)*\"" in
       object(self : 'self)
         method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
@@ -190,7 +191,7 @@ module Lexers =
                                                                     in unquote @@ Token.repr t) s)
       end
 
-    class virtual char s =
+    class virtual char _s =
       let regexp = Re.Str.regexp "'\\([^']\\|''\\|\\\\n\\|\\\\t\\)'" in
       object(self : 'self)
         method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result

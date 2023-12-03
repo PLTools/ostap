@@ -2,15 +2,15 @@
  * BNF3: BNF tree representation.
  * Copyright (C) 2008
  * Dmitri Boulytchev, St.Petersburg State University
- * 
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License version 2, as published by the Free Software Foundation.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * See the GNU Library General Public License version 2 for more details
  * (enclosed in the file COPYING).
  *)
@@ -21,7 +21,7 @@ module type PrintHelper =
   sig
 
     type t
-    
+
     val str    : string -> string
     val term   : string -> string
     val nt     : string -> string
@@ -36,7 +36,7 @@ module type PrintHelper =
     val list   : (t -> string) -> t list -> string list
     val rule   : string -> string -> string
     val prule  : string -> string list -> string -> string
-	
+
   end
 
 let concatWith s f x y = (if x = "" then "" else x ^ s) ^ (f y)
@@ -49,16 +49,16 @@ module rec Expr :
   sig
 
     type t =
-	String  of string   
-      | Term    of string    
-      | Nonterm of string    
-      | Apply   of t * t list 
-      | Star    of t        
-      | Plus    of t       
-      | Opt     of t       
-      | Alt     of t list  
-      | Seq     of t list   
-      | Group   of t      
+	String  of string
+      | Term    of string
+      | Nonterm of string
+      | Apply   of t * t list
+      | Star    of t
+      | Plus    of t
+      | Opt     of t
+      | Alt     of t list
+      | Seq     of t list
+      | Group   of t
       | Custom  of [`S of string | `T of t] list
 
     val string  : string -> t
@@ -122,11 +122,11 @@ module rec Expr :
       | x -> x
 
     let custom x = Custom x
-	  
+
     module Printer (X : PrintHelper with type t = t) =
       struct
 
-	let rec print = function 
+	let rec print = function
 	  | String   s     -> X.str     s
 	  | Term     t     -> X.term    t
 	  | Nonterm  n     -> X.nt      n
@@ -138,21 +138,21 @@ module rec Expr :
 	  | Group    e     -> X.group  (print e)
 	  | Custom   s     -> X.custom  print s
 	  | Apply   (x, y) -> X.apply  (print x) (X.list print y)
-		
+
       end
 
     module TeXPrinter  = Printer (TeXHelper)
     module TreePrinter = Printer (TreeHelper)
-     
+
     let toTree = TreePrinter.print
     let toTeX  = TeXPrinter .print
-	    
+
   end
 and TreeHelper : PrintHelper with type t = Expr.t =
   struct
 
     type t = Expr.t
-	  
+
     let opt    str   = sprintf "Opt (%s)" str
     let plus   str   = sprintf "Plus (%s)" str
     let aster  str   = sprintf "Aster (%s)" str
@@ -165,7 +165,7 @@ and TreeHelper : PrintHelper with type t = Expr.t =
     let str    arg   = sprintf "String %s" arg
     let rule   x y   = sprintf "%s :: %s" x y
 
-    let prule  x y z = 
+    let prule  x y z =
       let y = List.fold_left (fun acc y -> acc ^ "[" ^ y ^ "]") "" y in
       sprintf "%s%s :: %s" x y z
 
@@ -175,9 +175,9 @@ and TreeHelper : PrintHelper with type t = Expr.t =
   end
 and TeXHelper : PrintHelper with type t = Expr.t =
   struct
-	
+
     type t = Expr.t
-	  
+
     let quote s =
       let buf = Buffer.create (String.length s * 2) in
       for i=0 to String.length s - 1 do
@@ -200,36 +200,36 @@ and TeXHelper : PrintHelper with type t = Expr.t =
 	  | c    -> String.make 1 c
 	  )
       done;
-      Buffer.contents buf 
-	
+      Buffer.contents buf
+
     let opt    str = sprintf "\\osropt{%s}" str
     let plus   str = sprintf "\\osrplus{%s}" str
     let aster  str = sprintf "\\osraster{%s}" str
     let group  str = sprintf "\\osrgroup{%s}" str
     let nt     str = sprintf "\\osrnonterm{%s}" (quote str)
-    let alt    lst = "\osfralt " ^ (fold (concatWith "\\osralt " id) lst)
+    let alt    lst = "\\osfralt " ^ (fold (concatWith "\\osralt " id) lst)
     let seq    lst = sprintf "\\osrblock{%s}" (fold (concatWith "\\osbr " id) lst)
     let list   f x = List.map f x
     let term   str = sprintf "\\osrterm{%s}" (quote str)
 
-    let str x  = 
+    let str x  =
       let f = ref true in
       for i=0 to String.length x - 1 do
 	let c = x.[i] in
 	f := !f && ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
       done;
-      if !f then sprintf "\\osrterm{%s}" (quote x) 
+      if !f then sprintf "\\osrterm{%s}" (quote x)
       else sprintf "\\osrterm{``%s''}" (quote x)
 
     let rule   x y = sprintf "\\osrule{%s}{%s}\n" x y
 
-    let prule  x y z = 
+    let prule  x y z =
       let y = List.fold_left (fun acc yi -> acc ^ "[" ^ yi ^ "]") "" y in
       sprintf "\\osprule{%s}{%s}{%s}\n" x y z
 
     let custom f x = fold (concatWith "" (function `S s -> quote s | `T t -> f t)) x
     let apply  x y = sprintf "%s%s" x (fold (fun acc x -> acc ^ sprintf "\\osrargs{%s}" x) y)
-	
+
   end
 
 module Def =
@@ -240,10 +240,9 @@ module Def =
     let make  name      = function Expr.Group x -> name, []  , x | x -> name, []  , x
     let makeP name args = function Expr.Group x -> name, args, x | x -> name, args, x
 
-    let rec toTeX (name, args, expr) =
+    let toTeX (name, args, expr) =
       match args with
       | []   -> TeXHelper.rule  name (Expr.toTeX expr)
       | args -> TeXHelper.prule name args (Expr.toTeX expr)
 
   end
-
