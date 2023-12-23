@@ -78,7 +78,7 @@ struct
     let m = String.length stop   in
     let d = regexp (sprintf "\\(%s\\)\\|\\(%s\\)" (quote start) (quote stop)) in
     (fun s p ->
-       let rec inner p =
+       let inner p =
          if checkPrefix start s p
          then
            let rec jnner p c =
