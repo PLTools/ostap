@@ -126,7 +126,7 @@ module rec Locator :
             M.toString x
 
       let compare x y =
-         if Pervasives.compare x y = 0 then 0
+         if Stdlib.compare x y = 0 then 0
          else
          match (x, y) with
          | No, No -> 0
@@ -210,16 +210,16 @@ and FileLoc :
          succ, Some fil, reloc
 
       let stripLines s =
-         let r = Re_str.regexp "\r?\n#line \"\([^\"]*\)\" (\([0-9]+\):\([0-9]+\))\r?\n" in
-         let makeInt i s = int_of_string (Re_str.matched_group i s) in
+         let r = Re.Str.regexp "\r?\n#line \"\([^\"]*\)\" (\([0-9]+\):\([0-9]+\))\r?\n" in
+         let makeInt i s = int_of_string (Re.Str.matched_group i s) in
          let rec inner pos loc m s acc =
             try
                if !debug then printf "loc was: %s\n" (Coord.toString loc);
-               let first = Re_str.search_forward r s 0 in
-               let reloc = (Re_str.matched_group 1 s, (makeInt 2 s, makeInt 3 s)) in
+               let first = Re.Str.search_forward r s 0 in
+               let reloc = (Re.Str.matched_group 1 s, (makeInt 2 s, makeInt 3 s)) in
                let loc = if first > 0 then Coord.shift loc s 0 first else loc in
                let current = try MC.find loc m with Not_found -> [] in
-               let last = Re_str.match_end () in
+               let last = Re.Str.match_end () in
                let newpos = pos + first in
                if !debug then begin
                   printf "loc is: %s\n" (Coord.toString loc);
@@ -227,7 +227,7 @@ and FileLoc :
                   for i = 0 to min 20 (String.length s - 1) do printf "%c" s.[i] done;
                   printf "'\n";
                end;
-               inner newpos loc (MC.add loc ((newpos, reloc)::current) m) (Re_str.string_after s last) (acc ^ (Re_str.string_before s first))
+               inner newpos loc (MC.add loc ((newpos, reloc)::current) m) (Re.Str.string_after s last) (acc ^ (Re.Str.string_before s first))
             with Not_found -> m, acc ^ s
          in inner 0 (1, 1) MC.empty s ""
 
@@ -253,12 +253,12 @@ let phrase    phrase          = make phrase [||] Locator.No
 let orphan    phrase args     = make phrase args Locator.No
 
 let string t = 
-  let parmExpr = Re_str.regexp "%\\([0-9]+\\)" in
-  Re_str.global_substitute 
+  let parmExpr = Re.Str.regexp "%\\([0-9]+\\)" in
+  Re.Str.global_substitute 
     parmExpr  
     (fun s -> 
       try 
-        t.args.(int_of_string (Re_str.replace_matched "\\1" s))
+        t.args.(int_of_string (Re.Str.replace_matched "\\1" s))
       with
       | Failure "int_of_string" -> 
           raise (Failure 

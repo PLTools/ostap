@@ -19,6 +19,8 @@ open Combinators
 open Matcher 
 open Printf 
 
+module Types = Types_
+
 module Ostap =
   struct
 
@@ -97,13 +99,13 @@ let expr f ops opnd =
   in 
   ostap (inner[0][id])
 
-let read name = 
+let read name =
   let inch = open_in_bin name in
   let len  = in_channel_length inch in
-  let buf  = String.make len ' ' in
+  let buf  = Bytes.make len ' ' in
   really_input inch buf 0 len;
   close_in inch;
-  buf
+  Bytes.unsafe_to_string buf
 
 module Lexers =
   struct
@@ -120,10 +122,10 @@ module Lexers =
       end
 
     class virtual genericIdent regexp name keywords s =
-      let regexp = Re_str.regexp regexp in 
+      let regexp = Re.Str.regexp regexp in 
       object(self : 'a)
 	inherit checkKeywords keywords
-	method virtual get      : string -> Re_str.regexp -> ('a, Token.t, Reason.t) Types.result
+	method virtual get      : string -> Re.Str.regexp -> ('a, Token.t, Reason.t) Types.result
         method private getIdent : ('a, string, Reason.t) Types.result = 
 	  Types.bind 
 	    (self#get name regexp) 
@@ -150,9 +152,9 @@ module Lexers =
       end
 
     class virtual decimal s =
-      let regexp = Re_str.regexp "-?[0-9]+" in
+      let regexp = Re.Str.regexp "-?[0-9]+" in
       object(self : 'a)
-	method virtual get : string -> Re_str.regexp -> ('a, Token.t, Reason.t) Types.result
+	method virtual get : string -> Re.Str.regexp -> ('a, Token.t, Reason.t) Types.result
 	method getDECIMAL : ('a, int, Reason.t) Types.result = 
 	  Types.bind 
 	    (self#get "decimal constant" regexp)
@@ -160,9 +162,9 @@ module Lexers =
       end
 
     class virtual string s =
-      let regexp = Re_str.regexp (*"\"\([^\"]\|\\\"\)*\""*) "\"[^\"]*\"" in
+      let regexp = Re.Str.regexp (*"\"\([^\"]\|\\\"\)*\""*) "\"[^\"]*\"" in
       object(self : 'a)
-	method virtual get : String.t -> Re_str.regexp -> ('a, Token.t, Reason.t) Types.result
+	method virtual get : String.t -> Re.Str.regexp -> ('a, Token.t, Reason.t) Types.result
 	method getSTRING : ('a, String.t, Reason.t) Types.result =
 	  Types.bind
 	    (self#get "string constant" regexp)
@@ -170,9 +172,9 @@ module Lexers =
       end
 
     class virtual char s =
-      let regexp = Re_str.regexp "'\([^']\|\\'\)'" in
+      let regexp = Re.Str.regexp "'\([^']\|\\'\)'" in
       object(self : 'a)
-	method virtual get : String.t -> Re_str.regexp -> ('a, Token.t, Reason.t) Types.result
+	method virtual get : String.t -> Re.Str.regexp -> ('a, Token.t, Reason.t) Types.result
 	method getCHAR : ('a, Char.t, Reason.t) Types.result =
 	  Types.bind
 	    (self#get "character constant" regexp)
@@ -182,7 +184,7 @@ module Lexers =
     class skip skippers s =
       object inherit t s
 	val skipper = Skip.create skippers
-	method skip = skipper s
+	method! skip = skipper s
       end
 
   end

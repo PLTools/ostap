@@ -1,0 +1,27 @@
+description = "Parser-combinator library"
+requires = "re.str GT"
+archive(byte) = "ostap.cma"
+archive(byte, plugin) = "ostap.cma"
+archive(native) = "ostap.cmxa"
+exists_if = "ostap.cma"
+
+package "syntax" (
+  description = "Camlp5 syntax extension"
+  requires = "camlp5 ostap.BNF3"
+  directory = "syntax"
+  archive(native) = "pa_ostap.cmxa"
+  archive(syntax, native, preprocessor) = "pa_ostap.cmxa"
+  archive(syntax, byte, preprocessor) = "pa_ostap.cma"
+  archive(syntax, byte, toploop) = "pa_ostap.cma"
+)
+
+package "BNF3" (
+  description = "ENBF grammar representation"
+  requires = ""
+  directory = "BNF3"
+  archive(byte) = "BNF3.cma"
+  archive(byte, plugin) = "BNF3.cma"
+  archive(native) = "BNF3.cmxa"
+  archive(native, plugin) = "BNF3.cmxs"
+)
+

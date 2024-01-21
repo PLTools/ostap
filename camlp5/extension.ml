@@ -222,8 +222,8 @@
 
 (**/**)
 
-#load "pa_extend.cmo";;
-#load "q_MLast.cmo";;
+(* #load "pa_extend.cmo";;
+#load "q_MLast.cmo";; *)
 
 open Pcaml
 open Printf
@@ -324,7 +324,7 @@ let rec get_ident = function
   | _ -> []
 
 let rec get_defined_ident = function
-    <:patt< $_$ . $_$ >> -> []
+    <:patt< $longid:_$ . $lid:_$ >> -> []
   | <:patt< _ >> -> []
   | <:patt< $lid:x$ >> -> [x]
   | <:patt< ($p1$ as $p2$) >> -> get_defined_ident p1 @ get_defined_ident p2
@@ -336,7 +336,9 @@ let rec get_defined_ident = function
   | <:patt< ($list:pl$) >> -> List.flatten (List.map get_defined_ident pl)
   | <:patt< $uid:_$ >> -> []
   | <:patt< ` $_$ >> -> []
-  | <:patt< # $list:_$ >> -> []
+
+  | <:patt< # $lilongid:_$ >> -> []
+(*  | <:patt< # $list:_$ >> -> [] *)
   | <:patt< $p1$ $p2$ >> -> get_defined_ident p1 @ get_defined_ident p2
   | <:patt< { $list:lpl$ } >> ->
       List.flatten (List.map (fun (lab, p) -> get_defined_ident p) lpl)
@@ -368,7 +370,7 @@ EXTEND
     [ "ostap"; doc=OPT doc_name; "("; rule=o_rule; ")" -> 
       let ((name, rule), def) = rule in 
       !printBNF doc (texDef def);
-      (<:patt< $lid:name$ >>, rule) 
+      (<:patt< $lid:name$ >>, rule, <:vala<[]>>) 
     ] 
   ];
 
@@ -393,7 +395,7 @@ EXTEND
   o_rules: [
     [ rules=LIST1 o_rule SEP ";" ->      
       let (rules, defs) = List.split rules in
-      (List.map	(fun (name, rule) -> (<:patt< $lid:name$ >>, rule)) rules, defs)
+      (List.map	(fun (name, rule) -> (<:patt< $lid:name$ >>, rule, <:vala<[]>>)) rules, defs)
     ]
   ];
 

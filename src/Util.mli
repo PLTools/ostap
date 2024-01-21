@@ -15,7 +15,7 @@
  * (enclosed in the file COPYING).
  *)
 
-open Types
+open Types_
 open Combinators
 
 (** Predefined parsing utilities. *)
@@ -36,12 +36,12 @@ val ( ~$ ) : string -> < regexp : string -> string -> 'a; .. > -> 'a
     and folds it with function [f] and initial value [x]. Note that inside Ostap syntax extension the notation 
     [listByWith[delim][item][f][x]] should be used.
  *)
-val listByWith : ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types.parse ->
-                 ('a, 'd, 'c) Types.parse ->
+val listByWith : ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types_.parse ->
+                 ('a, 'd, 'c) Types_.parse ->
                  ('e -> 'd -> 'e) -> 
                  'e -> 
                  'a ->
-                 ('a, 'e, 'c) Types.result 
+                 ('a, 'e, 'c) Types_.result 
 
 (** [listBy s delim item] parses a non-empty list of [item]s delimited by [delim] from a stream [s].
      Note that inside Ostap syntax extension the notation [listBy[delim][item]] should be used.
@@ -49,7 +49,7 @@ val listByWith : ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types.parse ->
 val listBy : ('a, 'b, < add : 'c -> 'c; .. > as 'c) parse -> 
              ('a, 'd, 'c) parse -> 
              'a -> 
-             ('a, 'd list, 'c) Types.result
+             ('a, 'd list, 'c) Types_.result
 
 (** [list s item] parses a non-empty list delimited by commas. Inside Ostap syntax extensions this should
      be used in the form [list[item]].
@@ -61,32 +61,32 @@ val list : ('a, 'd, 'c) parse ->
 (** [listWith s item f x] parses a non-empty list delimited by commas and folds it with the function [f] and initial
     value [x]. Inside Ostap syntax extensions this should be used in the form [listWith[item][f][x]].
  *)
-val listWith : ('a, 'd, 'c) Types.parse -> 
+val listWith : ('a, 'd, 'c) Types_.parse -> 
                ('e -> 'd -> 'e) -> 'e -> 
-               (< look : string -> ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types.result; .. > as 'a) ->  
-               ('a, 'e, 'c) Types.result
+               (< look : string -> ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types_.result; .. > as 'a) ->  
+               ('a, 'e, 'c) Types_.result
 
 (** [list0*] functions are that analoguous to [list*] but parse possibly empty lists. *)
-val list0ByWith : ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types.parse ->
-                  ('a, 'd, 'c) Types.parse ->
+val list0ByWith : ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types_.parse ->
+                  ('a, 'd, 'c) Types_.parse ->
                   ('e -> 'd -> 'e) -> 
                   'e -> 
                   'a ->
-                  ('a, 'e, 'c) Types.result 
+                  ('a, 'e, 'c) Types_.result 
 
 val list0By : ('a, 'b, < add : 'c -> 'c; .. > as 'c) parse -> 
               ('a, 'd, 'c) parse -> 
               'a ->
-              ('a, 'd list, 'c) Types.result
+              ('a, 'd list, 'c) Types_.result
 
-val list0With : ('a, 'd, 'c) Types.parse -> 
+val list0With : ('a, 'd, 'c) Types_.parse -> 
                 ('e -> 'd -> 'e) -> 
                 'e -> 
-                (< look : string -> ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types.result; .. > as 'a) ->  
-                ('a, 'e, 'c) Types.result
+                (< look : string -> ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types_.result; .. > as 'a) ->  
+                ('a, 'e, 'c) Types_.result
 
 val list0 : ('a, 'd, 'c) parse -> 
-            (< look : string -> ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types.result; .. > as 'a) ->
+            (< look : string -> ('a, 'b, < add : 'c -> 'c; .. > as 'c) Types_.result; .. > as 'a) ->
             ('a, 'd list, 'c) result
 
 (** Identity parser *)
@@ -140,8 +140,8 @@ module Lexers :
      *)
     class virtual uident : string list -> string ->
       object('a)
-        method virtual get : string -> Re_str.regexp -> ('a, Matcher.Token.t, Reason.t) Types.result
-        method getUIDENT : ('a, string, Reason.t) Types.result
+        method virtual get : string -> Re.Str.regexp -> ('a, Matcher.Token.t, Reason.t) Types_.result
+        method getUIDENT : ('a, string, Reason.t) Types_.result
       end
 
     (** A lexer component for parsing identifiers, started with a lowercase letter;
@@ -149,8 +149,8 @@ module Lexers :
      *)
     class virtual lident : string list -> string ->
       object('a)
-	method virtual get : string -> Re_str.regexp -> ('a, Matcher.Token.t, Reason.t) Types.result
-        method getLIDENT : ('a, string, Reason.t) Types.result
+	method virtual get : string -> Re.Str.regexp -> ('a, Matcher.Token.t, Reason.t) Types_.result
+        method getLIDENT : ('a, string, Reason.t) Types_.result
       end
 
     (** A lexer component for parsing regular identifiers;
@@ -158,8 +158,8 @@ module Lexers :
      *)
     class virtual ident : string list -> string ->
       object('a)
-        method virtual get : string -> Re_str.regexp -> ('a, Matcher.Token.t, Reason.t) Types.result
-        method getIDENT : ('a, string, Reason.t) Types.result
+        method virtual get : string -> Re.Str.regexp -> ('a, Matcher.Token.t, Reason.t) Types_.result
+        method getIDENT : ('a, string, Reason.t) Types_.result
       end
 
     (** A lexer component for parsing signed decimal constants; the first argument is 
@@ -167,8 +167,8 @@ module Lexers :
      *)
     class virtual decimal : string ->
       object('a)
-	method virtual get : string -> Re_str.regexp -> ('a, Matcher.Token.t, Reason.t) Types.result	
-        method getDECIMAL : ('a, int, Reason.t) Types.result
+	method virtual get : string -> Re.Str.regexp -> ('a, Matcher.Token.t, Reason.t) Types_.result	
+        method getDECIMAL : ('a, int, Reason.t) Types_.result
       end
 
     (** A lexer component for parsing double-quoted strings; the first argument is 
@@ -176,8 +176,8 @@ module Lexers :
      *)
     class virtual string : String.t ->
       object('a)
-	method virtual get : String.t -> Re_str.regexp -> ('a, Matcher.Token.t, Reason.t) Types.result	
-        method getSTRING : ('a, String.t, Reason.t) Types.result
+	method virtual get : String.t -> Re.Str.regexp -> ('a, Matcher.Token.t, Reason.t) Types_.result	
+        method getSTRING : ('a, String.t, Reason.t) Types_.result
       end
 
     (** A lexer component for parsing single-quoted characters; the first argument is 
@@ -185,8 +185,8 @@ module Lexers :
      *)
     class virtual char : String.t ->
       object('a)
-	method virtual get : String.t -> Re_str.regexp -> ('a, Matcher.Token.t, Reason.t) Types.result	
-        method getCHAR : ('a, Char.t, Reason.t) Types.result
+	method virtual get : String.t -> Re.Str.regexp -> ('a, Matcher.Token.t, Reason.t) Types_.result	
+        method getCHAR : ('a, Char.t, Reason.t) Types_.result
       end
 
     (** A lexer component for skipping whitespaces and comments; the first argument is

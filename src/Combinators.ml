@@ -18,7 +18,7 @@
 open Printf
 open Matcher
 open List
-open Types
+open Types_
 
 let join = function
 | None   -> fun y -> y

@@ -67,7 +67,7 @@
      open Matcher 
 	
      class lexer s = v}
-         let ident = Re_str.regexp "[a-zA-Z_]\([a-zA-Z_0-9]\)*"] in 
+         let ident = Re.Str.regexp "[a-zA-Z_]\([a-zA-Z_0-9]\)*"] in 
          let skip  = Skip.create [Skip.whitespaces " \t\n\r"] in 
          object (self) 
             inherit Matcher.t s 
@@ -88,7 +88,7 @@
         the stream; in the default case it does not skip anything.}
        {- method [getL] for any lexeme [L] to recognize. You may do this simply by
         calling method [get] from the base class and passing to it string name of the
-        lexeme (for diagnostic purposes) and regular pattern of type [Re_str.regexp].
+        lexeme (for diagnostic purposes) and regular pattern of type [Re.Str.regexp].
        } 
     }    
 
@@ -185,19 +185,19 @@ class t : string ->
     (** [get name expr] is a parser which parses regular expression [expr] at the current
         position. [name] is a name for diagnostic purposes.
     *)
-    method get : string -> Re_str.regexp -> ('a, Token.t, Reason.t) Types.result
+    method get : string -> Re.Str.regexp -> ('a, Token.t, Reason.t) Types_.result
 
-    (** [regexp name str] is a shorthand for [get name (Re_str.regexp str)]. *)
-    method regexp : string -> string -> ('a, Token.t, Reason.t) Types.result
+    (** [regexp name str] is a shorthand for [get name (Re.Str.regexp str)]. *)
+    method regexp : string -> string -> ('a, Token.t, Reason.t) Types_.result
 
     (** [getEOF] detects the end of stream. *)
-    method getEOF : ('a, Token.t, Reason.t) Types.result
+    method getEOF : ('a, Token.t, Reason.t) Types_.result
 
     (** [loc] gets the current location in the stream. *)
     method loc : Msg.Locator.t
 
     (** [look str] looks at the current stream for string [str]. *)
-    method look : string -> ('a, Token.t, Reason.t) Types.result
+    method look : string -> ('a, Token.t, Reason.t) Types_.result
 
     (** Method to skip meaningless symbols (e.g. whitespaces); returns
         position and coordinates of first meaningful symbol. [skip] is implicitly

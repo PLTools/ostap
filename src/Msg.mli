@@ -92,6 +92,7 @@ and FileLoc :
     val stripLines   : string -> r * string
     val addFirst     : r -> r
     val printRelocs  : r -> unit
+    
     (** works only before calling Locator.updateToString *)
     val printReloc   : string -> r -> Locator.t -> unit
 

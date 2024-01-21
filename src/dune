@@ -1,0 +1,33 @@
+(env
+ (_
+  (flags
+   (:standard -warn-error -20-26-27-8-14-33-39-52))))
+
+(library
+ (name BNF3)
+ (public_name ostap.BNF3)
+ (modules BNF3)
+ (wrapped false))
+
+(library
+ (name ostap)
+ (public_name ostap)
+ (modules
+  Combinators
+  ;Errors
+  Matcher
+  Msg
+  Pretty
+  PrioReorderer
+  Reason
+  Trap
+  Types_
+  Util)
+ (wrapped true)
+ (libraries GT re.str BNF3)
+ (preprocessor_deps %{project_root}/camlp5/pp5+ostap.exe)
+ (preprocess
+  (per_module
+   ((action
+     (run %{project_root}/camlp5/pp5+ostap.exe %{input-file}))
+    Util))))

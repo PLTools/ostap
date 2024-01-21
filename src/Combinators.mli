@@ -15,7 +15,7 @@
  * (enclosed in the file COPYING).
  *)
  
-open Types 
+open Types_
 
 (** Ostap --- monadic parser combinators library. *)
 
@@ -130,18 +130,18 @@ class memoStream :
     method coord : Msg.Coord.t
     method get :
       string ->
-      Re_str.regexp -> ('a, Matcher.Token.t, Reason.t) Types.result
-    method getEOF : ('a, Matcher.Token.t, Reason.t) Types.result
+      Re.Str.regexp -> ('a, Matcher.Token.t, Reason.t) Types_.result
+    method getEOF : ('a, Matcher.Token.t, Reason.t) Types_.result
     method line : int
     method loc : Msg.Locator.t
     method look :
-      string -> ('a, Matcher.Token.t, Reason.t) Types.result
+      string -> ('a, Matcher.Token.t, Reason.t) Types_.result
     method memoize :
-      ('a, 'p, 'e) Types.parse -> ('a, 'p, 'e) Types.result
+      ('a, 'p, 'e) Types_.parse -> ('a, 'p, 'e) Types_.result
     method pos : int
     method prefix : int -> string
     method regexp :
-      string -> string -> ('a, Matcher.Token.t, Reason.t) Types.result
+      string -> string -> ('a, Matcher.Token.t, Reason.t) Types_.result
     method skip :
       int ->
       Msg.Coord.t -> [ `Failed of Msg.t | `Skipped of int * Msg.Coord.t ]
@@ -150,12 +150,12 @@ class memoStream :
 (** Wrap left-recursive calls in your parser definition in [memo] function to be able to process them.
 *)
 val memo :
-  (#memoStream as 'a, 'b, 'c) Types.parse ->
-  'a -> ('a, 'b, 'c) Types.result
+  (#memoStream as 'a, 'b, 'c) Types_.parse ->
+  'a -> ('a, 'b, 'c) Types_.result
   
 (** Fix point combinator to support left recursion in the parser implementation.
 *)  
 val fix :
-  ((#memoStream as 'a, 'b, 'c) Types.parse ->
-   'a -> ('a, 'b, 'c) Types.result) ->
-  'a -> ('a, 'b, 'c) Types.result
+  ((#memoStream as 'a, 'b, 'c) Types_.parse ->
+   'a -> ('a, 'b, 'c) Types_.result) ->
+  'a -> ('a, 'b, 'c) Types_.result
