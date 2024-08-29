@@ -149,17 +149,17 @@ module Lexers =
       end
 
     class virtual uident keywords s =
-      object inherit genericIdent "[A-Z][a-zA-Z_0-9']*\\b" "u-identifier" keywords s as ident
+      object inherit genericIdent "[A-Z][a-zA-Z_0-9']*" "u-identifier" keywords s as ident
 	method getUIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result = ident#getIdent
       end
 
     class virtual lident keywords s =
-      object inherit genericIdent "[a-z][a-zA-Z_0-9']*\\b" "l-identifier" keywords s as ident
+      object inherit genericIdent "[a-z][a-zA-Z_0-9']*" "l-identifier" keywords s as ident
 	method getLIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result = ident#getIdent
       end
 
     class virtual ident keywords s =
-      object inherit genericIdent "[a-zA-Z][a-zA-Z_0-9]*\\b" "identifier" keywords s as ident
+      object inherit genericIdent "[a-zA-Z][a-zA-Z_0-9]*" "identifier" keywords s as ident
 	method getIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result = ident#getIdent
       end
 
