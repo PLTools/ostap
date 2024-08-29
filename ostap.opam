@@ -13,7 +13,8 @@ bug-reports: "https://github.com/PLTools/ostap/issues"
 depends: [
   "dune" {>= "3.7"}
   "GT"
-  "re"
+  "ocaml" {>= "4.14"}
+  "re" {>= "1.10"}
   "ocamlfind" {build}
   "camlp5" {>= "8"}
   "odoc" {with-doc}

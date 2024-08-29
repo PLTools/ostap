@@ -25,7 +25,10 @@
  (bug_reports "https://github.com/PLTools/ostap/issues")
  (depends
   GT
-  re
+  (ocaml
+   (>= 4.14))
+  (re
+   (>= 1.10))
   (ocamlfind :build)
   (camlp5
    (>= 8))))
