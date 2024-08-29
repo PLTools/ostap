@@ -4,6 +4,9 @@
 
 (name ostap)
 
+(source
+ (github PLTools/ostap))
+
 (license LGPL-2.1-or-later)
 
 ; (maintainer "")
