@@ -4,11 +4,13 @@
 
 (name ostap)
 
+(license LGPL-2.1-or-later)
+
 ; (maintainer "")
 
 (package
  (name ostap)
- (version 0.5.1)
+ (version 0.6)
  (synopsis "Parser-combinator library")
  (description "")
  (authors
@@ -18,4 +20,9 @@
  (maintainers "Kakadu@pm.me")
  (homepage https://github.com/PLTools/ostap)
  (bug_reports "https://github.com/PLTools/ostap/issues")
- (depends))
+ (depends
+  GT
+  re
+  (ocamlfind :build)
+  (camlp5
+   (>= 8))))
