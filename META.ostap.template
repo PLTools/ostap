@@ -11,6 +11,7 @@ package "syntax" (
   directory = "syntax"
   archive(native) = "pa_ostap.cmxa"
   archive(syntax, native, preprocessor) = "pa_ostap.cmxa"
+  archive(syntax, camlp5o, preprocessor) = "pa_ostap.cma"
   archive(syntax, byte, preprocessor) = "pa_ostap.cma"
   archive(syntax, byte, toploop) = "pa_ostap.cma"
 )
