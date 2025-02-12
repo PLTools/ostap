@@ -47,6 +47,25 @@
    %{targets})))
 
 (rule
+ (targets pp5+GT+ostap.exe)
+ (deps
+  %{project_root}/config/package-doc.cfg
+  %{project_root}/src/BNF3.cmxa
+  (:cmas pa_ostap.cmxa))
+ (action
+  (run
+   mkcamlp5.opt
+   -package
+   camlp5,camlp5.pa_o,camlp5.macro,camlp5.pr_o,camlp5.pr_dump,GT.syntax,GT.syntax.all
+   %{read-lines:../config/package-doc.cfg}
+   -package
+   re.str
+   %{project_root}/src/BNF3.cmxa
+   %{cmas}
+   -o
+   %{targets})))
+
+(rule
  (targets pp5+ostap+o.exe)
  (deps
   %{project_root}/config/package-doc.cfg
