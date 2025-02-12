@@ -20,7 +20,7 @@ jobs:
       OCANREN_DOCS: yes
       OPAMROOT: /home/user/.opam
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: kakadu18/ocaml:pltlab
       options: --user user
@@ -61,3 +61,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_build/default/_doc/_html
           destination_dir: api
+
+      #### Check that installed ostap works
+      - run: |
+        dune install
+        opam show ostap --list-files
+
+      - run: ocamlfind c -i -syntax camlp5o -package ostap,GT.syntax,GT.syntax.all,ostap.syntax camlp5/regression/test100.ml
