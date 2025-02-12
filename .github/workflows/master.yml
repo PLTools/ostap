@@ -64,7 +64,7 @@ jobs:
 
       #### Check that installed ostap works
       - run: |
-        dune install
-        opam show ostap --list-files
+          dune install
+          opam show ostap --list-files
 
       - run: ocamlfind c -i -syntax camlp5o -package ostap,GT.syntax,GT.syntax.all,ostap.syntax camlp5/regression/test100.ml
