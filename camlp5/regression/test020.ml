@@ -1,5 +1,5 @@
 open Ostap
-open Types_
+open Types
 open Combinators
 open Matcher
 open Printf

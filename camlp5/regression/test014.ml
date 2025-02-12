@@ -1,5 +1,5 @@
 open Ostap
-open Types_
+open Types
 open Matcher
 
 class lexer s =

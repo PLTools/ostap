@@ -17,7 +17,7 @@
 
 open Re.Str
 open Ostap
-open Types_
+open Types
 open Printf
 
 class lexer (s : string) =

@@ -1,5 +1,5 @@
 open Lazy
-open Types_
+open Types
 
 module HashCons :
   sig

@@ -18,7 +18,7 @@
 
 open Re.Str
 open Ostap
-open Types_
+open Types
 
 class lexer (s : string) =
   object (_ : 'self)

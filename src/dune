@@ -21,7 +21,7 @@
   PrioReorderer
   Reason
   Trap
-  Types_
+  Types
   Util)
  (wrapped true)
  (libraries GT re.str BNF3)

@@ -130,52 +130,52 @@ module Lexers =
       let regexp = Re.Str.regexp regexp in
       object(self : 'self)
 	inherit checkKeywords keywords
-	method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
-        method private getIdent : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result =
+	method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result
+        method private getIdent : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result =
           fun k -> self#get name regexp
                      (fun t s ->
                        let r = Token.repr t in
                        if self#keyword r
-                       then Types_.failWith (new Reason.t (Msg.make "%0 expected" [|name|] (Token.loc t)))
+                       then Types.failWith (new Reason.t (Msg.make "%0 expected" [|name|] (Token.loc t)))
                        else k r s)
       end
 
     class virtual infix _s =
       let regexp = Re.Str.regexp "[+*/%$#@!|&^~?<>:=\\-]+" in
       object(self : 'self)
-        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
-        method getINFIX  : 'b. (string -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result =
+        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result
+        method getINFIX  : 'b. (string -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result =
           fun k -> self#get "decimal constant" regexp (fun t s -> k (Token.repr t) s)
       end
 
     class virtual uident keywords s =
       object inherit genericIdent "[A-Z][a-zA-Z_0-9']*" "u-identifier" keywords s as ident
-	method getUIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result = ident#getIdent
+	method getUIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result = ident#getIdent
       end
 
     class virtual lident keywords s =
       object inherit genericIdent "[a-z][a-zA-Z_0-9']*" "l-identifier" keywords s as ident
-	method getLIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result = ident#getIdent
+	method getLIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result = ident#getIdent
       end
 
     class virtual ident keywords s =
       object inherit genericIdent "[a-zA-Z][a-zA-Z_0-9]*" "identifier" keywords s as ident
-	method getIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result = ident#getIdent
+	method getIDENT : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result = ident#getIdent
       end
 
     class virtual decimal _s =
       let regexp = Re.Str.regexp "-?[0-9]+" in
       object(self : 'self)
-        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
-        method getDECIMAL  : 'b. (int -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result =
+        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result
+        method getDECIMAL  : 'b. (int -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result =
           fun k -> self#get "decimal constant" regexp (fun t s -> k (int_of_string (Token.repr t)) s)
       end
 
     class virtual string _s =
       let regexp = Re.Str.regexp "\"\\([^\"]\\|\"\"\\)*\"" in
       object(self : 'self)
-        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
-        method getSTRING   : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result =
+        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result
+        method getSTRING   : 'b. (String.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result =
           fun k -> self#get "string constant" regexp (fun t s -> k (let unquote s =
                                                                       let s      = String.sub s 1 (String.length s - 2) in
                                                                       let n      = String.length s in
@@ -194,8 +194,8 @@ module Lexers =
     class virtual char _s =
       let regexp = Re.Str.regexp "'\\([^']\\|''\\|\\\\n\\|\\\\t\\)'" in
       object(self : 'self)
-        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result
-        method getCHAR     : 'b. (Char.t -> 'self -> ('self, 'b, Reason.t) Types_.result) -> ('self, 'b, Reason.t) Types_.result =
+        method virtual get : 'b. String.t -> Re.Str.regexp -> (Token.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result
+        method getCHAR     : 'b. (Char.t -> 'self -> ('self, 'b, Reason.t) Types.result) -> ('self, 'b, Reason.t) Types.result =
           fun k -> self#get "character constant" regexp (fun t s -> k (let s = Token.repr t in
                                                                        match String.sub s 1 (String.length s - 2) with
                                                                        | "\\t" -> '\t'
@@ -214,7 +214,7 @@ module Lexers =
   end
 
 let parse l p =
-  unwrap (p l (fun res s -> Types_.Parsed ((res, s), None)))
+  unwrap (p l (fun res s -> Types.Parsed ((res, s), None)))
     (fun x -> `Ok x)
     (fun x ->
       match x with

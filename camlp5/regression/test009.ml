@@ -17,7 +17,7 @@
 
 open Re.Str
 open Ostap
-open Types_
+open Types
 
 class lexer (s : string) =
   object (self : 'self)
@@ -70,7 +70,7 @@ class lexer (s : string) =
         then k "EOF" {< p = p >}
         else emptyResult
   end
-  
+
 ostap (
   list[elem] : hd:elem tl:(-"," elem)* {hd :: tl};
   m : list[ostap (IDENT)] -EOF

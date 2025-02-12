@@ -15,7 +15,7 @@
    * (enclosed in the file COPYING).
    *)
 
-open Types_
+open Types
 open String
 open Printf
 open Re.Str
