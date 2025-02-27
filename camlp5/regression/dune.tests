@@ -196,6 +196,32 @@
     (run %{project_root}/camlp5/pp5+GT+ostap.exe %{input-file}))))
 
 (cram
+  (applies_to test016)
+  (deps test016.exe))
+
+(executable
+  (name test016)
+  (modules test016)
+  (libraries ostap)
+  (preprocessor_deps %{project_root}/camlp5/pp5+GT+ostap.exe)
+  (preprocess
+  (action
+    (run %{project_root}/camlp5/pp5+GT+ostap.exe %{input-file}))))
+
+(cram
+  (applies_to test020)
+  (deps test020.exe))
+
+(executable
+  (name test020)
+  (modules test020)
+  (libraries ostap)
+  (preprocessor_deps %{project_root}/camlp5/pp5+GT+ostap.exe)
+  (preprocess
+  (action
+    (run %{project_root}/camlp5/pp5+GT+ostap.exe %{input-file}))))
+
+(cram
   (applies_to test100)
   (deps test100.exe))
 

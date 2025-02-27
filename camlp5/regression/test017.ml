@@ -319,7 +319,7 @@ let mixfixExpr f ops opnd =
   let fstParts l = List.rev @@ List.tl @@ List.rev l in
   let lastPart l = List.hd (List.rev l) in
   let midParts l = List.tl (fstParts l) in
-  let assoc    l =fst ops.(l) in
+  let assoc    l = fst ops.(l) in
   let n = Array.length ops in
   let id x = x in
   let ostap (
@@ -338,11 +338,11 @@ let mixfixExpr f ops opnd =
                 (List.fold_right
                   (fun opart level acc ->
                      match level with
-                     | `Simple l         -> ostap (-opart x:inner[l][id]   a:acc {x :: a})
-                     | `Many (l, folder) -> ostap (-opart x:(inner[l][id])* a:acc {(folder x) :: a})
-                     | `Opt (l, default) -> ostap (-opart x:(inner[l][id])? a:acc {(match x with Some x -> x | None -> default) :: a})
+                     | `Simple l           -> ostap (-opart x:inner[l][id]    a:acc {x :: a})
+                     | `Many  (l, folder)  -> ostap (-opart x:(inner[l][id])* a:acc {(folder x) :: a})
+                     | `Opt   (l, default) -> ostap (-opart x:(inner[l][id])? a:acc {(match x with Some x -> x | None -> default) :: a})
                   )
-                   levels
+                  levels
                   (ostap (lastPart[oparts] {[]}))
                 )
               in

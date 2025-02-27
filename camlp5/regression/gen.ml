@@ -1,3 +1,5 @@
+(* Use `(cd camlp5/regression && ocaml gen.ml)` to regenerate *)
+
 #use "topfind";;
 #require "unix";;
 let count = 1000
@@ -17,9 +19,7 @@ let get_all_tests () =
   loop []
 
 let is_skipped_test = function
-  | "test016"
-  | "test017"
-  | "test020" -> true
+  | "test017" -> true
   | _ -> false
 
 let () =
