@@ -15,7 +15,7 @@ class lexer (str :  string) =
   let skip  = Skip.create [Skip.whitespaces " \n\t\r"] in
   object (self : 'self)
 
-    inherit Matcher.t str as super
+    inherit Matcher.t str 
 
     method! skip p c = skip str p c
   end
@@ -40,6 +40,6 @@ let _ =
     | `Pn a -> "P[" ^ (print a) ^ "(n)]"
     | `Pl a -> "P[" ^ (print a) ^ "]"
   in
-  match Combinators.Mem.mapply main (new lexer "x(n)(n).x(n).x") (fun res s -> Parsed ((res, s), None)) with
+  match Combinators.Mem.mapply (Combinators.Mem.memoize main) (new lexer "x(n)(n).x(n).x") (fun res s -> Parsed ((res, s), None)) with
   | Parsed ((b, _), _) -> Printf.printf "Parsed: %s\n" (print b)
   | Failed _ -> Printf.printf "Not parsed:\n"

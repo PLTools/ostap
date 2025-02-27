@@ -17,9 +17,9 @@ let get_all_tests () =
   loop []
 
 let is_skipped_test = function
-  | "test016"
+  (* | "test016"
   | "test017"
-  | "test020" -> true
+  | "test020" -> true *)
   | _ -> false
 
 let () =

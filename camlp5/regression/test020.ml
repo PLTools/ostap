@@ -9,7 +9,7 @@ class lexer s =
   let const = Re.Str.regexp "[0-9]+" in
   object (self)
 
-    inherit Combinators.memoStream s
+    inherit Combinators.memo s
 
     method skip p c = skip s p c
     method getCONST = self#get "constant"   const
