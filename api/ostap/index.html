@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>index (ostap.index)</title><meta charset="utf-8"/><link rel="stylesheet" href="../_odoc-theme/odoc.css"/><meta name="generator" content="odoc 2.4.4"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – ostap</nav><header class="odoc-preamble"><h1 id="package-ostap"><a href="#package-ostap" class="anchor"></a>Package ostap <span class="version">0.6</span> <nav><a type="text/plain; charset=UTF-8" href="_doc-dir/CHANGES">changes</a> <a href="https://github.com/PLTools/ostap/issues">issues</a> <a href="#package_info">more…</a></nav></h1><p>Ostap is a parser-combinator library, armed by Camlp5 syntax extension to write parsers.</p></header><nav class="odoc-toc"><ul><li><a href="#basic-usage">Basic Usage</a></li><li><a href="#package_info">Package info</a></li></ul></nav><div class="odoc-content"><h2 id="basic-usage"><a href="#basic-usage" class="anchor"></a>Basic Usage</h2><p>This is an expression parser being run in OCaml toplevel.</p><pre class="language-ocaml"><code># #use &quot;topfind.camlp5&quot;;;
+- : unit = ()
+Findlib has been successfully loaded. Additional directives:
+  #require &quot;package&quot;;;      to load a package
+  #list;;                   to list the available packages
+  #camlp4o;;                to load camlp4 (standard syntax)
+  #camlp4r;;                to load camlp4 (revised syntax)
+  #predicates &quot;p,q,...&quot;;;   to set these predicates
+  Topfind.reset();;         to force that packages will be reloaded
+  #thread;;                 to enable threads
+
+- : unit = ()
+Additional Camlp5 directives:
+  #camlp5o;;                to load camlp5 (standard syntax)
+  #camlp5r;;                to load camlp5 (revised syntax)
+
+- : unit = ()
+
+# #require &quot;compiler-libs.common&quot;;;
+# #require &quot;camlp-streams&quot;;;
+# #require &quot;camlp5&quot;;;
+# #load &quot;camlp5o.cma&quot;;;
+# #camlp5o;;
+# type expr = Mul of expr * expr | Add of expr * expr | Var of string;;
+type expr = Mul of expr * expr | Add of expr * expr | Var of string
+# let rec expr_to_string = function
+  | Var s -&gt; s
+  | Mul (x, y) -&gt; &quot;(&quot; ^ expr_to_string x ^ &quot; * &quot; ^ expr_to_string y ^ &quot;)&quot;
+  | Add (x, y) -&gt; &quot;(&quot; ^ expr_to_string x ^ &quot; + &quot; ^ expr_to_string y ^ &quot;)&quot;;;
+val expr_to_string : expr -&gt; string = &lt;fun&gt;
+
+# #require &quot;ostap&quot;;;
+# #require &quot;ostap.syntax&quot;;;
+# open Ostap;;
+# ostap (
+    expr   : addi;
+    addi   : x:mulli   &quot;+&quot; y:addi  { Add (x, y) } | mulli;
+    mulli  : x:primary &quot;*&quot; y:mulli { Mul (x, y) } | primary;
+    primary: x:IDENT {Var x}
+           | -&quot;(&quot; expr -&quot;)&quot;
+  )
+val expr :
+  (&lt; equal : 'self -&gt; bool;
+     getIDENT : 'b.
+                  (string -&gt;
+                   'self -&gt;
+                   ('self, 'b, &lt; add : 'a -&gt; 'a; .. &gt; as 'a)
+                   Ostap.Types.result) -&gt;
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string -&gt;
+              ('alook -&gt; 'self -&gt; ('self, 'b, 'a) Ostap.Types.result) -&gt;
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. &gt;
+   as 'self) -&gt;
+  (expr, 'self, 'c, 'a) Types.k -&gt; ('c * 'self, 'a) Types.tag = &lt;fun&gt;
+val addi :
+  (&lt; equal : 'self -&gt; bool;
+     getIDENT : 'b.
+                  (string -&gt;
+                   'self -&gt;
+                   ('self, 'b, &lt; add : 'a -&gt; 'a; .. &gt; as 'a)
+                   Ostap.Types.result) -&gt;
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string -&gt;
+              ('alook -&gt; 'self -&gt; ('self, 'b, 'a) Ostap.Types.result) -&gt;
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. &gt;
+   as 'self) -&gt;
+  (expr, 'self, 'c, 'a) Types.k -&gt; ('c * 'self, 'a) Types.tag = &lt;fun&gt;
+val mulli :
+  (&lt; equal : 'self -&gt; bool;
+     getIDENT : 'b.
+                  (string -&gt;
+                   'self -&gt;
+                   ('self, 'b, &lt; add : 'a -&gt; 'a; .. &gt; as 'a)
+                   Ostap.Types.result) -&gt;
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string -&gt;
+              ('alook -&gt; 'self -&gt; ('self, 'b, 'a) Ostap.Types.result) -&gt;
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. &gt;
+   as 'self) -&gt;
+  (expr, 'self, 'c, 'a) Types.k -&gt; ('self, 'c, 'a) Ostap.Types.result = &lt;fun&gt;
+val primary :
+  (&lt; equal : 'self -&gt; bool;
+     getIDENT : 'b.
+                  (string -&gt;
+                   'self -&gt;
+                   ('self, 'b, &lt; add : 'a -&gt; 'a; .. &gt; as 'a)
+                   Ostap.Types.result) -&gt;
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string -&gt;
+              ('alook -&gt; 'self -&gt; ('self, 'b, 'a) Ostap.Types.result) -&gt;
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. &gt;
+   as 'self) -&gt;
+  (expr, 'self, 'c, 'a) Types.k -&gt; ('self, 'c, 'a) Ostap.Types.result = &lt;fun&gt;
+# let parse p pr s =
+  match Util.parse
+        (object
+            (* Makes some default stream with minimal entries *)
+            inherit Matcher.t s
+            inherit Util.Lexers.decimal s
+            inherit Util.Lexers.ident [] s
+            inherit! Util.Lexers.skip [
+            Matcher.Skip.whitespaces &quot; \t\n&quot;;
+            Matcher.Skip.lineComment &quot;--&quot;;
+            Matcher.Skip.nestedComment &quot;(*&quot; &quot;*)&quot;
+            ] s
+        end)
+        (ostap (p -EOF))
+  with
+  | `Ok   p  -&gt; Printf.printf &quot;Parsed      : %s\n&quot; @@ pr p
+  | `Fail er -&gt; Printf.printf &quot;Syntax error: %s\n&quot; er;;
+val parse :
+  ((&lt; chrs : char list; col : int; coord : Msg.MC.key; equal : 'a -&gt; bool;
+      get : 'b.
+              string -&gt;
+              Re.Str.regexp -&gt;
+              (Matcher.Token.t -&gt;
+               'a -&gt; ('a, 'b, Ostap.Reason.t) Ostap.Types.result) -&gt;
+              ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      getDECIMAL : 'b.
+                     (int -&gt;
+                      'a -&gt; ('a, 'b, Ostap.Reason.t) Ostap.Types.result) -&gt;
+                     ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      getEOF : 'b.
+                 (Matcher.Token.t -&gt;
+                  'a -&gt; ('a, 'b, Ostap.Reason.t) Ostap.Types.result) -&gt;
+                 ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      getIDENT : 'b.
+                   (string -&gt;
+                    'a -&gt; ('a, 'b, Ostap.Reason.t) Ostap.Types.result) -&gt;
+                   ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      line : int; loc : Msg.Locator.t;
+      look : 'b.
+               string -&gt;
+               (Matcher.Token.t -&gt;
+                'a -&gt; ('a, 'b, Ostap.Reason.t) Ostap.Types.result) -&gt;
+               ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      pos : int; prefix : int -&gt; string;
+      regexp : 'b.
+                 string -&gt;
+                 string -&gt;
+                 (Matcher.Token.t -&gt;
+                  'a -&gt; ('a, 'b, Ostap.Reason.t) Ostap.Types.result) -&gt;
+                 ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      skip : int -&gt;
+             Msg.MC.key -&gt;
+             [ `Failed of Msg.t | `Skipped of int * Msg.MC.key ];
+      str : string &gt;
+    as 'a) -&gt;
+   ('d -&gt;
+    (&lt; equal : 'self -&gt; bool;
+       getEOF : 'b.
+                  ('aEOF -&gt; 'self -&gt; ('self, 'b, 'c) Ostap.Types.result) -&gt;
+                  ('self, 'b, 'c) Ostap.Types.result;
+       .. &gt;
+     as 'self) -&gt;
+    ('d * 'self, 'c) Types.tag) -&gt;
+   ('e * 'f,
+    &lt; retrieve : [&gt; `First of int ] -&gt;
+                 [&gt; `Desc ] -&gt;
+                 (Msg.Locator.t *
+                  [&lt; `Comment of string * 'g | `Msg of Msg.t ] list)
+                 list;
+      .. &gt;)
+   Types.tag) -&gt;
+  ('e -&gt; string) -&gt; string -&gt; unit = &lt;fun&gt;
+# let _ = List.iter (parse expr expr_to_string)  [&quot;a&quot;; &quot;a+b&quot;; &quot;a+b+c&quot;; &quot;a+b*c&quot;; &quot;a+b*c+d&quot;; &quot;(a+b)*c&quot;];;
+Parsed      : a
+Parsed      : (a + b)
+Parsed      : (a + (b + c))
+Parsed      : (a + (b * c))
+Parsed      : (a + ((b * c) + d))
+Parsed      : ((a + b) * c)
+- : unit = ()</code></pre><h2 id="package_info"><a href="#package_info" class="anchor"></a>Package info</h2><table class="package info"><tr id="info-authors"><td><a href="#info-authors" aria-hidden="true" class="anchor"></a>authors</td><td><ul><li>Kakadu&commat;pm.me</li><li>danila.borovkov1996&commat;gmail.com</li><li>dboulytchev&commat;gmail.com</li></ul></td></tr><tr id="info-changes-files"><td><a href="#info-changes-files" aria-hidden="true" class="anchor"></a>changes-files</td><td><ul><li><a type="text/plain; charset=UTF-8" href="_doc-dir/CHANGES">CHANGES</a></li></ul></td></tr><tr id="info-depends"><td><a href="#info-depends" aria-hidden="true" class="anchor"></a>depends</td><td><ul><li><a href="../GT/index.html">GT</a></li><li><a href="../camlp5/index.html">camlp5</a></li><li><a href="../dune/index.html">dune</a></li><li><a href="../mdx/index.html">mdx</a></li><li><a href="../ocaml/index.html">ocaml</a></li><li><a href="../ocamlfind/index.html">ocamlfind</a></li><li><a href="../odig/index.html">odig</a></li><li><a href="../odoc/index.html">odoc</a></li><li><a href="../pa_ppx/index.html">pa_ppx</a></li><li><a href="../re/index.html">re</a></li></ul></td></tr><tr id="info-homepage"><td><a href="#info-homepage" aria-hidden="true" class="anchor"></a>homepage</td><td><ul><li><a href="https://github.com/PLTools/ostap">https://github.com/PLTools/ostap</a></li></ul></td></tr><tr id="info-issues"><td><a href="#info-issues" aria-hidden="true" class="anchor"></a>issues</td><td><ul><li><a href="https://github.com/PLTools/ostap/issues">https://github.com/PLTools/ostap/issues</a></li></ul></td></tr><tr id="info-license"><td><a href="#info-license" aria-hidden="true" class="anchor"></a>license</td><td><ul><li>LGPL-2.1-or-later</li></ul></td></tr><tr id="info-maintainers"><td><a href="#info-maintainers" aria-hidden="true" class="anchor"></a>maintainers</td><td><ul><li>Kakadu&commat;pm.me</li></ul></td></tr><tr id="info-readme-files"><td><a href="#info-readme-files" aria-hidden="true" class="anchor"></a>readme-files</td><td><ul><li><a type="text/plain; charset=UTF-8" href="_doc-dir/README.md">README.md</a></li></ul></td></tr><tr id="info-repo"><td><a href="#info-repo" aria-hidden="true" class="anchor"></a>repo</td><td><ul><li>git+https://github.com/PLTools/ostap.git</li></ul></td></tr><tr id="info-version"><td><a href="#info-version" aria-hidden="true" class="anchor"></a>version</td><td><ul><li>0.6</li></ul></td></tr></table></div></body></html>

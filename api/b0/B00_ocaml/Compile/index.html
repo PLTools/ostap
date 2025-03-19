@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Compile (b0.B00_ocaml.Compile)</title><meta charset="utf-8"/><link rel="stylesheet" href="../../../_odoc-theme/odoc.css"/><meta name="generator" content="odoc 2.4.4"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – <a href="../../index.html">b0</a> &#x00BB; <a href="../index.html">B00_ocaml</a> &#x00BB; Compile</nav><header class="odoc-preamble"><h1>Module <code><span>B00_ocaml.Compile</span></code></h1></header><div class="odoc-content"><div class="odoc-spec"><div class="spec value anchored" id="val-c_to_o"><a href="#val-c_to_o" class="anchor"></a><code><span><span class="keyword">val</span> c_to_o : 
+  <span><span class="optlabel">?post_exec</span>:<span>(<span><a href="../../B000/Op/index.html#type-t">B000.Op.t</a> <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="optlabel">?k</span>:<span>(<span>int <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">comp</span>:<a href="../../B00/Tool/index.html#type-t">B00.Tool.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">reads</span>:<span><a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">c</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">o</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-mli_to_cmi"><a href="#val-mli_to_cmi" class="anchor"></a><code><span><span class="keyword">val</span> mli_to_cmi : 
+  <span><span class="optlabel">?post_exec</span>:<span>(<span><a href="../../B000/Op/index.html#type-t">B000.Op.t</a> <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="optlabel">?k</span>:<span>(<span>int <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">and_cmti</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">comp</span>:<a href="../../B00/Tool/index.html#type-t">B00.Tool.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">reads</span>:<span><a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">mli</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">o</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-ml_to_cmo"><a href="#val-ml_to_cmo" class="anchor"></a><code><span><span class="keyword">val</span> ml_to_cmo : 
+  <span><span class="optlabel">?post_exec</span>:<span>(<span><a href="../../B000/Op/index.html#type-t">B000.Op.t</a> <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="optlabel">?k</span>:<span>(<span>int <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">and_cmt</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">reads</span>:<span><a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">has_cmi</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">ml</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">o</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-ml_to_cmx"><a href="#val-ml_to_cmx" class="anchor"></a><code><span><span class="keyword">val</span> ml_to_cmx : 
+  <span><span class="optlabel">?post_exec</span>:<span>(<span><a href="../../B000/Op/index.html#type-t">B000.Op.t</a> <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="optlabel">?k</span>:<span>(<span>int <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">and_cmt</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">reads</span>:<span><a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">has_cmi</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">ml</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">o</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-ml_to_impl"><a href="#val-ml_to_impl" class="anchor"></a><code><span><span class="keyword">val</span> ml_to_impl : 
+  <span><span class="optlabel">?post_exec</span>:<span>(<span><a href="../../B000/Op/index.html#type-t">B000.Op.t</a> <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="optlabel">?k</span>:<span>(<span>int <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">code</span>:<a href="../Conf/index.html#type-code">Conf.code</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">reads</span>:<span><a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">has_cmi</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">ml</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">o</span>:<a href="../../B0_std/Fpath/index.html#type-t">B0_std.Fpath.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">and_cmt</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-mod_src_intf"><a href="#val-mod_src_intf" class="anchor"></a><code><span><span class="keyword">val</span> mod_src_intf : 
+  <span><span class="label">and_cmti</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">comp</span>:<a href="../../B00/Tool/index.html#type-t">B00.Tool.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">requires</span>:<span><a href="../Lib/index.html#type-t">Lib.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">mod_srcs</span>:<span><a href="../Mod/Src/index.html#type-t">Mod.Src.t</a> <a href="../../B0_std/String/Map/index.html#type-t">Mod.Name.Map.t</a></span> <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../Mod/Src/index.html#type-t">Mod.Src.t</a> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-mod_src_impl"><a href="#val-mod_src_impl" class="anchor"></a><code><span><span class="keyword">val</span> mod_src_impl : 
+  <span><span class="label">and_cmt</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">code</span>:<a href="../Conf/index.html#type-code">Conf.code</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">requires</span>:<span><a href="../Lib/index.html#type-t">Lib.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">mod_srcs</span>:<span><a href="../Mod/Src/index.html#type-t">Mod.Src.t</a> <a href="../../B0_std/String/Map/index.html#type-t">Mod.Name.Map.t</a></span> <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../Mod/Src/index.html#type-t">Mod.Src.t</a> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-intfs"><a href="#val-intfs" class="anchor"></a><code><span><span class="keyword">val</span> intfs : 
+  <span><span class="label">and_cmti</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">comp</span>:<a href="../../B00/Tool/index.html#type-t">B00.Tool.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">requires</span>:<span><a href="../Lib/index.html#type-t">Lib.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">mod_srcs</span>:<span><a href="../Mod/Src/index.html#type-t">Mod.Src.t</a> <a href="../../B0_std/String/Map/index.html#type-t">Mod.Name.Map.t</a></span> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-impls"><a href="#val-impls" class="anchor"></a><code><span><span class="keyword">val</span> impls : 
+  <span><span class="label">and_cmt</span>:bool <span class="arrow">&#45;&gt;</span></span>
+  <span><a href="../../B00/Memo/index.html#type-t">B00.Memo.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">code</span>:<a href="../Conf/index.html#type-code">Conf.code</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">opts</span>:<a href="../../B0_std/Cmd/index.html#type-t">B0_std.Cmd.t</a> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">requires</span>:<span><a href="../Lib/index.html#type-t">Lib.t</a> list</span> <span class="arrow">&#45;&gt;</span></span>
+  <span><span class="label">mod_srcs</span>:<span><a href="../Mod/Src/index.html#type-t">Mod.Src.t</a> <a href="../../B0_std/String/Map/index.html#type-t">Mod.Name.Map.t</a></span> <span class="arrow">&#45;&gt;</span></span>
+  unit</span></code></div></div></div></body></html>
