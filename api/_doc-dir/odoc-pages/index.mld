@@ -1,0 +1,191 @@
+{0 Synopsis}
+
+Ostap is a parser-combinator library, armed by Camlp5 syntax extension to write parsers.
+
+{1 Basic Usage}
+
+This is an expression parser being run in OCaml toplevel.
+
+{@ocaml[
+# #use "topfind.camlp5";;
+- : unit = ()
+Findlib has been successfully loaded. Additional directives:
+  #require "package";;      to load a package
+  #list;;                   to list the available packages
+  #camlp4o;;                to load camlp4 (standard syntax)
+  #camlp4r;;                to load camlp4 (revised syntax)
+  #predicates "p,q,...";;   to set these predicates
+  Topfind.reset();;         to force that packages will be reloaded
+  #thread;;                 to enable threads
+
+- : unit = ()
+Additional Camlp5 directives:
+  #camlp5o;;                to load camlp5 (standard syntax)
+  #camlp5r;;                to load camlp5 (revised syntax)
+
+- : unit = ()
+
+# #require "compiler-libs.common";;
+# #require "camlp-streams";;
+# #require "camlp5";;
+# #load "camlp5o.cma";;
+# #camlp5o;;
+# type expr = Mul of expr * expr | Add of expr * expr | Var of string;;
+type expr = Mul of expr * expr | Add of expr * expr | Var of string
+# let rec expr_to_string = function
+  | Var s -> s
+  | Mul (x, y) -> "(" ^ expr_to_string x ^ " * " ^ expr_to_string y ^ ")"
+  | Add (x, y) -> "(" ^ expr_to_string x ^ " + " ^ expr_to_string y ^ ")";;
+val expr_to_string : expr -> string = <fun>
+
+# #require "ostap";;
+# #require "ostap.syntax";;
+# open Ostap;;
+# ostap (
+    expr   : addi;
+    addi   : x:mulli   "+" y:addi  { Add (x, y) } | mulli;
+    mulli  : x:primary "*" y:mulli { Mul (x, y) } | primary;
+    primary: x:IDENT {Var x}
+           | -"(" expr -")"
+  )
+val expr :
+  (< equal : 'self -> bool;
+     getIDENT : 'b.
+                  (string ->
+                   'self ->
+                   ('self, 'b, < add : 'a -> 'a; .. > as 'a)
+                   Ostap.Types.result) ->
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string ->
+              ('alook -> 'self -> ('self, 'b, 'a) Ostap.Types.result) ->
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. >
+   as 'self) ->
+  (expr, 'self, 'c, 'a) Types.k -> ('c * 'self, 'a) Types.tag = <fun>
+val addi :
+  (< equal : 'self -> bool;
+     getIDENT : 'b.
+                  (string ->
+                   'self ->
+                   ('self, 'b, < add : 'a -> 'a; .. > as 'a)
+                   Ostap.Types.result) ->
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string ->
+              ('alook -> 'self -> ('self, 'b, 'a) Ostap.Types.result) ->
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. >
+   as 'self) ->
+  (expr, 'self, 'c, 'a) Types.k -> ('c * 'self, 'a) Types.tag = <fun>
+val mulli :
+  (< equal : 'self -> bool;
+     getIDENT : 'b.
+                  (string ->
+                   'self ->
+                   ('self, 'b, < add : 'a -> 'a; .. > as 'a)
+                   Ostap.Types.result) ->
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string ->
+              ('alook -> 'self -> ('self, 'b, 'a) Ostap.Types.result) ->
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. >
+   as 'self) ->
+  (expr, 'self, 'c, 'a) Types.k -> ('self, 'c, 'a) Ostap.Types.result = <fun>
+val primary :
+  (< equal : 'self -> bool;
+     getIDENT : 'b.
+                  (string ->
+                   'self ->
+                   ('self, 'b, < add : 'a -> 'a; .. > as 'a)
+                   Ostap.Types.result) ->
+                  ('self, 'b, 'a) Ostap.Types.result;
+     look : 'b.
+              string ->
+              ('alook -> 'self -> ('self, 'b, 'a) Ostap.Types.result) ->
+              ('self, 'b, 'a) Ostap.Types.result;
+     .. >
+   as 'self) ->
+  (expr, 'self, 'c, 'a) Types.k -> ('self, 'c, 'a) Ostap.Types.result = <fun>
+# let parse p pr s =
+  match Util.parse
+        (object
+            (* Makes some default stream with minimal entries *)
+            inherit Matcher.t s
+            inherit Util.Lexers.decimal s
+            inherit Util.Lexers.ident [] s
+            inherit! Util.Lexers.skip [
+            Matcher.Skip.whitespaces " \t\n";
+            Matcher.Skip.lineComment "--";
+            Matcher.Skip.nestedComment "(*" "*)"
+            ] s
+        end)
+        (ostap (p -EOF))
+  with
+  | `Ok   p  -> Printf.printf "Parsed      : %s\n" @@ pr p
+  | `Fail er -> Printf.printf "Syntax error: %s\n" er;;
+val parse :
+  ((< chrs : char list; col : int; coord : Msg.MC.key; equal : 'a -> bool;
+      get : 'b.
+              string ->
+              Re.Str.regexp ->
+              (Matcher.Token.t ->
+               'a -> ('a, 'b, Ostap.Reason.t) Ostap.Types.result) ->
+              ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      getDECIMAL : 'b.
+                     (int ->
+                      'a -> ('a, 'b, Ostap.Reason.t) Ostap.Types.result) ->
+                     ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      getEOF : 'b.
+                 (Matcher.Token.t ->
+                  'a -> ('a, 'b, Ostap.Reason.t) Ostap.Types.result) ->
+                 ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      getIDENT : 'b.
+                   (string ->
+                    'a -> ('a, 'b, Ostap.Reason.t) Ostap.Types.result) ->
+                   ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      line : int; loc : Msg.Locator.t;
+      look : 'b.
+               string ->
+               (Matcher.Token.t ->
+                'a -> ('a, 'b, Ostap.Reason.t) Ostap.Types.result) ->
+               ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      pos : int; prefix : int -> string;
+      regexp : 'b.
+                 string ->
+                 string ->
+                 (Matcher.Token.t ->
+                  'a -> ('a, 'b, Ostap.Reason.t) Ostap.Types.result) ->
+                 ('a, 'b, Ostap.Reason.t) Ostap.Types.result;
+      skip : int ->
+             Msg.MC.key ->
+             [ `Failed of Msg.t | `Skipped of int * Msg.MC.key ];
+      str : string >
+    as 'a) ->
+   ('d ->
+    (< equal : 'self -> bool;
+       getEOF : 'b.
+                  ('aEOF -> 'self -> ('self, 'b, 'c) Ostap.Types.result) ->
+                  ('self, 'b, 'c) Ostap.Types.result;
+       .. >
+     as 'self) ->
+    ('d * 'self, 'c) Types.tag) ->
+   ('e * 'f,
+    < retrieve : [> `First of int ] ->
+                 [> `Desc ] ->
+                 (Msg.Locator.t *
+                  [< `Comment of string * 'g | `Msg of Msg.t ] list)
+                 list;
+      .. >)
+   Types.tag) ->
+  ('e -> string) -> string -> unit = <fun>
+# let _ = List.iter (parse expr expr_to_string)  ["a"; "a+b"; "a+b+c"; "a+b*c"; "a+b*c+d"; "(a+b)*c"];;
+Parsed      : a
+Parsed      : (a + b)
+Parsed      : (a + (b + c))
+Parsed      : (a + (b * c))
+Parsed      : (a + ((b * c) + d))
+Parsed      : ((a + b) * c)
+- : unit = ()
+]}

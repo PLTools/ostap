@@ -1,0 +1,12 @@
+## 0.5.1
+
+### Changed
+
+- Switch to dune
+
+## 0.5
+
+### Changed
+
+- upgrade for Camlp5 8.x
+
