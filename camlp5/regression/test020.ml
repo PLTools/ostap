@@ -8,11 +8,11 @@ class lexer s =
   let skip  = Skip.create [Skip.whitespaces " \n\t\r"] in
   let const = Re.Str.regexp "[0-9]+" in
   object (self)
+    inherit Matcher.t s
 
-    inherit Combinators.memo s
-
-    method skip p c = skip s p c
-    method getCONST = self#get "constant"   const
+    method! skip p c = skip s p c
+    method getCONST : 'b . (Token.t -> 'self -> ('self, 'b, Reason.t) result) -> ('self, 'b, Reason.t) result =
+      self#get "constant"   const
 
   end
 
@@ -27,16 +27,19 @@ module Test0 = struct
     match r with
     | `Add (x, y) -> (print x) ^ " + " ^ (print y)
     | `Var -> "a"
+    | `I _ -> "I"
 end
 
 module Test1 = struct
-  let rec main = ostap (e -EOF)
+  let n = ostap (a:CONST {`N a})
+
+  let rec t eta = ostap ("(" a:e ")" {`TBr a} | a:n {`TN a}) eta
   and e s = fix (fun e -> ostap ( a:e "+" b:t {`EAdd (a, b)}
                                 | a:e "-" b:t {`ESub (a, b)}
                                 | a:t {`ET a}
                                 )) s
-  and t = ostap ("(" a:e ")" {`TBr a} | a:n {`TN a})
-  and n = ostap (a:CONST {`N a})
+
+  let main = ostap (e -EOF)
 
   let rec print r =
     match r with
@@ -49,8 +52,7 @@ module Test1 = struct
 end
 
 module Test2 = struct
-  let rec main = ostap (exp -EOF)
-  and exp s = fix (fun exp -> ostap ( i:inner "+" e:exp {`Add (`Inner i, `Exp e)}
+  let rec exp s = fix (fun exp -> ostap ( i:inner "+" e:exp {`Add (`Inner i, `Exp e)}
                                     | i:inner {`Inner i}
                                     )) s
   and inner s = fix (fun inner -> ostap ( i:inner "-" p:primary {`Sub (`Inner i, `Primary p)}
@@ -58,6 +60,7 @@ module Test2 = struct
                                         )) s
   and primary = ostap (c:CONST {`Const c})
 
+  let main = ostap (exp -EOF)
   let rec print r =
     match r with
     | `Primary p -> print p
@@ -76,7 +79,7 @@ module Test3 = struct
   and exp s = fix (fun exp -> ostap ( i:inner "+" e:exp {`E2 (i, e)}
                                     | i:inner {`E1 i}
                                     )) s
-  and main = ostap(memo[exp] -EOF)
+  let main = ostap(memo[exp] -EOF)
 
   let rec print r =
     match r with
@@ -88,9 +91,9 @@ module Test3 = struct
 end
 
 module Test4 = struct
-  let rec l = ostap (a:p "." "x" {`Lp a} | "x" {`Lx})
+  let rec l eta = ostap (a:p "." "x" {`Lp a} | "x" {`Lx}) eta
   and p s = fix (fun p -> ostap (a:p "(" "n" ")" {`Pn a} | a:p "." "x" {`Pl (`Lp a)} | "x" {`Pl `Lx})) s
-  and main = ostap (p -EOF)
+  let main = ostap (p -EOF)
 
   let rec print r =
     match r with
@@ -148,7 +151,7 @@ module Test7 = struct
     main: memo[l] -EOF
   )
 
-  let rec print r =
+  let print r =
     match r with
     | `Lp -> "aha!"
 end
@@ -159,6 +162,10 @@ let _ =
     then "a+a"
     else Sys.argv.(1)
   in
-  match Test0.main (new lexer input) with
+  match Test0.main (new lexer input) (fun res s -> match res with
+                                              | `Add (_,_)
+	                                            | `I _ -> Parsed ((res, s), None)
+                                              | _ -> failwith "Not implemented") with
   | Parsed ((b, _), _) -> Printf.printf "Parsed. %s\n" (Test0.print b)
   | Failed m -> Printf.printf "Not parsed:\n%s\n" (Reason.toString `All `Acc m)
+  | Empty -> failwith "not implemented"
