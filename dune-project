@@ -2,6 +2,8 @@
 
 (generate_opam_files true)
 
+(using mdx 0.3)
+
 (name ostap)
 
 (source
@@ -24,11 +26,14 @@
  (homepage https://github.com/PLTools/ostap)
  (bug_reports "https://github.com/PLTools/ostap/issues")
  (depends
-  GT
   (ocaml
    (>= 4.14))
   (re
    (>= 1.10))
-  (ocamlfind :build)
   (camlp5
-   (>= 8))))
+   (>= 8))
+  GT
+  (ocamlfind :build)
+  (mdx :with-test)
+  ;
+  ))

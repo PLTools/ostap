@@ -1,0 +1,6 @@
+(documentation)
+
+(mdx
+ (files index.mld)
+ (package ostap)
+ (libraries ostap))
