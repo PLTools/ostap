@@ -24,12 +24,12 @@ Additional Camlp5 directives:
   #camlp5r;;                to load camlp5 (revised syntax)
 
 - : unit = ()
+
+# #require "compiler-libs.common";;
+# #require "camlp-streams";;
+# #require "camlp5";;
+# #load "camlp5o.cma";;
 # #camlp5o;;
-/mnt/mand/.opam/4.14.2+flambda/lib/ocaml/compiler-libs: added to search path
-/mnt/mand/.opam/4.14.2+flambda/lib/camlp-streams: added to search path
-/mnt/mand/.opam/4.14.2+flambda/lib/camlp-streams/camlp_streams.cma: loaded
-/mnt/mand/.opam/4.14.2+flambda/lib/camlp5: added to search path
-/mnt/mand/.opam/4.14.2+flambda/lib/camlp5/camlp5o.cma: loaded
 # type expr = Mul of expr * expr | Add of expr * expr | Var of string;;
 type expr = Mul of expr * expr | Add of expr * expr | Var of string
 # let rec expr_to_string = function

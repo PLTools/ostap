@@ -35,5 +35,8 @@
   GT
   (ocamlfind :build)
   (mdx :with-test)
+  (odig :with-doc)
+  (odoc :with-doc)
+  (pa_ppx :with-doc)
   ;
   ))

@@ -12,12 +12,15 @@ homepage: "https://github.com/PLTools/ostap"
 bug-reports: "https://github.com/PLTools/ostap/issues"
 depends: [
   "dune" {>= "3.7"}
-  "GT"
   "ocaml" {>= "4.14"}
   "re" {>= "1.10"}
-  "ocamlfind" {build}
   "camlp5" {>= "8"}
+  "GT"
+  "ocamlfind" {build}
+  "mdx" {with-test}
+  "odig" {with-doc}
   "odoc" {with-doc}
+  "pa_ppx" {with-doc}
 ]
 build: [
   ["dune" "subst"] {dev}

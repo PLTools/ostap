@@ -66,6 +66,4 @@
  (mode
   (promote (until-clean)))
  (action
-  (progn
-   (echo FUCK)
-   (run pdflatex -shell-escape -interaction=nonstopmode %{input}))))
+  (run pdflatex -shell-escape -interaction=nonstopmode %{input})))

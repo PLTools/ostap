@@ -11,15 +11,12 @@ on:
   #schedule:
   #  - cron: "0 13 * * 1"
     # https://jasonet.co/posts/scheduled-actions/
+env:
+  OPAMROOT: /home/user/.opam
+  OPAMCONFIRMLEVEL: unsafe-yes
 
 jobs:
   build:
-    env:
-      #OCANREN_STATS: yes
-      # enabling stats required extra link library
-      #OCANREN_DOCS: yes
-      OPAMROOT: /home/user/.opam
-
     runs-on: ubuntu-latest
     container:
       image: kakadu18/ocaml:pltools
@@ -38,18 +35,27 @@ jobs:
 
       - run: opam update
 
-      - name: Install dependencies for documentation
-        run: opam install odoc pa_ppx --yes --confirm-level=unsafe-yes
-
-      - run: opam install . --yes --deps-only --with-test --with-doc --confirm-level=unsafe-yes
+      - name: Install dependencies
+        run: opam install . --yes --deps-only --with-test --with-doc
       - run: opam exec -- dune build
       - run: opam exec -- dune runtest
 
+      - name: Build and Test in Release
+        run: |
+          opam exec -- dune build @all @check --profile=release
+          opam exec -- dune build @runtest --profile=release
 
       #### API documentation
       - name: Build API documentation
-        run: opam exec -- dune build @doc
+        run: |
+          opam exec -- dune b @install --profile=release
+          opam exec -- dune install
+          opam exec -- odig odoc --odoc-theme=odig.gruvbox.light --no-tag-index --no-pkg-deps ${{ env.latest }}
+          echo "DOCS_PATH=$(opam exec -- odig cache path)/html" >> $GITHUB_ENV
 
+      - run: ls $(opam exec -- odig cache path)/html
+
+      - run: ls $(opam exec -- odig cache path)/html/ostap
 
       - name: Deploy API documentation
         #if: ${{ github.event.pull_request.head.repo.full_name == 'PLTools/OCanren' }}
@@ -58,7 +64,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_build/default/_doc/_html
+          publish_dir: ${{ env.DOCS_PATH }}
           destination_dir: api
 
       #### Check that installed ostap works
