@@ -73,4 +73,5 @@ jobs:
           opam show ostap --list-files
 
       - run: |
-          opam exec -- ocamlfind c -i -syntax camlp5o -package ostap,GT.syntax,GT.syntax.all,ostap.syntax camlp5/regression/test100.ml
+          opam exec -- ocamlfind c -i -syntax camlp5o -package ostap,GT.syntax,GT.syntax.all,ostap.syntax tests/test100.ml
+
