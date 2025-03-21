@@ -11,11 +11,11 @@
 
 (license LGPL-2.1-or-later)
 
-; (maintainer "")
+(maintainers "Kakadu@pm.me")
 
 (package
  (name ostap)
- (version 0.6)
+ (version 0.6.1)
  (synopsis "Parser-combinator library")
  (description "")
  (authors

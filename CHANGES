@@ -1,8 +1,15 @@
-## 0.5.1
+## v0.6.1
 
 ### Changed
 
-- Switch to dune
+- Fix META file
+- Polishing tests
+
+## v0.6
+
+### Changed
+
+- switch to dune
 
 ## 0.5
 
