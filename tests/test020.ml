@@ -2,7 +2,6 @@ open Ostap
 open Types
 open Combinators
 open Matcher
-open Printf
 
 class lexer s =
   let skip  = Skip.create [Skip.whitespaces " \n\t\r"] in

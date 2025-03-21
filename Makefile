@@ -1,4 +1,4 @@
-.PHONY: all doc install clean odig
+.PHONY: all doc install test clean odig
 all:
 	dune b -p ostap $(DUNE_OPTIONS)
 
@@ -8,6 +8,9 @@ doc:
 install:
 	dune b @install $(DUNE_OPTIONS)
 	dune install ostap
+
+test:
+	dune test $(DUNE_OPTIONS)
 
 clean:
 	@dune clean

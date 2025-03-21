@@ -43,3 +43,4 @@ let _ =
   match main (new lexer "1-(2+3)+4") (fun res s -> Parsed ((res, s), None)) with
   | Parsed ((b, _), _) -> Printf.printf "Parsed: %s\n" (print b)
   | Failed _ -> Printf.printf "Not parsed:\n"
+  | Empty -> failwith "Not implemented"
