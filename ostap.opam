@@ -12,7 +12,7 @@ homepage: "https://github.com/PLTools/ostap"
 bug-reports: "https://github.com/PLTools/ostap/issues"
 depends: [
   "dune" {>= "3.7"}
-  "ocaml" {>= "4.14"}
+  "ocaml" {>= "4.14" & < "5" | >= "5.3"}
   "re" {>= "1.10"}
   "camlp5" {>= "8"}
   "GT"

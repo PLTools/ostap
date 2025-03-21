@@ -27,7 +27,11 @@
  (bug_reports "https://github.com/PLTools/ostap/issues")
  (depends
   (ocaml
-   (>= 4.14))
+   (or
+    (and
+     (>= 4.14)
+     (< 5))
+    (>= 5.3)))
   (re
    (>= 1.10))
   (camlp5
