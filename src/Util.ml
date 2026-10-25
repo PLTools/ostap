@@ -160,13 +160,27 @@ module Lexers =
       end
 
     class virtual string s =
-      let regexp = Re.Str.regexp (*"\"\([^\"]\|\\\"\)*\""*) "\"[^\"]*\"" in
+      let regexp = Re.Str.regexp "\"\\([^\"]\\|\"\"\\)*\"" in
       object(self : 'a)
 	method virtual get : String.t -> Re.Str.regexp -> ('a, Token.t, Reason.t) Types.result
 	method getSTRING : ('a, String.t, Reason.t) Types.result =
 	  Types.bind
 	    (self#get "string constant" regexp)
-	    (fun t -> `Ok (Token.repr t))
+	    (fun t ->
+              let unquote s =
+                let s      = String.sub s 1 (String.length s - 2) in
+                let n      = String.length s in
+                let buf    = Buffer.create n in
+                let rec iterate i =
+                  if i < n then (
+                    Buffer.add_char buf s.[i];
+                    iterate (i + if s.[i] = '"' then 2 else 1)
+                  )
+                in
+                iterate 0;
+                Buffer.contents buf
+              in
+              `Ok (unquote @@ Token.repr t))
       end
 
     class virtual char s =
